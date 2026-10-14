@@ -11,7 +11,7 @@ permission notices for substantial portions of the Software.
 - License: MIT
 - Portions used: VS Code workbench `colors` (WebStorm New UI chrome), including
   activity bar, side bar, status bar, tabs, panels, inputs, and related UI
-  tokens in `themes/oldtale-dark.json`.
+  tokens in `themes/pierre-dark.json`, from the upstream `themes/oldtale-dark.json`.
 
 ```
 MIT License
@@ -42,7 +42,7 @@ SOFTWARE.
 - Repository: https://github.com/topazape/oldtale.nvim
 - License: MIT
 - Portions used: editor syntax highlighting palette and `tokenColors` mappings
-  in `themes/oldtale-dark.json`, adapted from the OldTale Neovim color scheme.
+  in `themes/pierre-dark.json`, adapted from the OldTale Neovim color scheme.
 
 ```
 MIT License

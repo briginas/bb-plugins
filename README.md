@@ -1,66 +1,99 @@
-# Oldtale для BB IDE
+# Oldtale Theme for BB
 
-Тема интерфейса, терминала и подсветки кода для BB IDE 0.46+, основанная на
-[WebStorm OldTale Dark](https://github.com/briginas/webstorm-oldtale-dark-theme).
+Oldtale colors for the BB interface, terminal, and code, with dark and light modes.
+This plugin adapts [WebStorm OldTale Dark](https://github.com/briginas/webstorm-oldtale-dark-theme) for [BB](https://getbb.app).
 
-## Подключение
+![Oldtale dark and light palette preview](assets/palette.svg)
+
+The preview shows palette samples, not an application screenshot.
+Dark mode uses graphite surfaces and the original Oldtale terminal and code colors.
+Light mode uses a companion interface and terminal palette with `github-light` code colors.
+
+## Install
+
+Requirements: BB 0.46.0 or later, Plugin SDK 0.6.37 or a compatible 0.6.x version, and npm on PATH.
+
+Install the latest compatible 1.x release:
 
 ```sh
-cd ~/dev/bb-oldtale-theme
-sh install.sh
-bb theme set oldtale
+bb plugin install 'git:https://github.com/briginas/bb-plugin-oldtale-theme.git@^1.0.0'
 ```
 
-Скрипт копирует файлы темы в каталог `oldtale` внутри пути, который возвращает
-`bb theme dir`. Исходники остаются в `~/dev/bb-oldtale-theme`. Повторный запуск
-обновляет эту установку; чужую тему скрипт не заменяет. Сам скрипт не переключает
-активную палитру.
+Then select the palette:
 
-В BB выберите тёмный режим в Settings → Appearance: режим и палитра настраиваются
-отдельно. Там же можно выбрать палитру `oldtale`. Изменения применяются без перезапуска.
-После редактирования `theme.css` или JSON подсветки снова выполните
-`sh install.sh`, затем `bb theme set oldtale`.
+```sh
+bb theme set plugin:oldtale-theme:oldtale
+```
 
-Для возврата к стандартной палитре: `bb theme reset`.
+You can also select **Oldtale** under Settings → Appearance.
+Choose light or dark mode separately in Appearance.
+Installation adds the palette without changing the current selection.
 
-## Палитра
+The plugin ID is `oldtale-theme`.
+The palette ID is `plugin:oldtale-theme:oldtale`.
 
-| Роль | Цвет в тёмном режиме |
-| --- | --- |
-| Основной фон | `#1e1f22` |
-| Карточки, меню | `#26282d` |
-| Боковая колонка, поднятые панели | `#2b2d30` |
-| Основной текст | `#aaa7b0` |
-| Текст боковой колонки | `#dfe1e5` |
-| Вторичный текст | `#9ea0a8` |
-| Синий акцент | `#6a9bfa` |
-| Успех, добавления | `#799f8a` |
-| Ошибки, удаления | `#bf7c76` |
-| Предупреждения | `#c29e49` |
-| Файлы, типы | `#cc9c86` |
-| Фиолетовый | `#9a8dbf` |
+## Update
 
-Основные цвета взяты из оригинала. Фон интерфейса соответствует графитовому фону
-терминала исходной темы; боковая колонка — её панелям, основной текст — редактору.
-Это отделяет палитру от почти чёрного интерфейса BB Default. Подсветка кода сохраняет
-оригинальный фон `#141415`. Яркий синий используется для читаемых ссылок и
-элементов управления, текст на акцентных кнопках — тёмный. Малозаметный текст
-слегка осветлён для читаемости на графитовых панелях. Все 16 ANSI-цветов тёмного
-терминала совпадают с исходником; для каждого задан читаемый цвет текста на заливке.
+```sh
+bb plugin update oldtale-theme
+```
 
-Для светлого режима предусмотрена отдельная адаптация интерфейса и терминала;
-подсветка кода в нём — встроенная `github-light`.
+The release range keeps updates within version 1.x.
 
-## Файлы и источник
+## Move from the standalone theme
 
-- `theme.css` — переменные интерфейса BB и палитра терминала.
-- `theme.json` — связь палитры с подсветкой кода.
-- `pierre-dark.json` — исходные цвета редактора и TextMate-правила с именем для BB.
-- `upstream/oldtale-dark.json` — неизменённый исходник.
-- `install.sh` — регистрация темы в BB.
+Install the plugin and select `plugin:oldtale-theme:oldtale` with the commands in **Install**.
+The plugin and the custom palette `oldtale` use different IDs, so they can coexist.
+The plugin preserves the existing CSS and dark code colors.
 
-Источник зафиксирован на коммите
+After you select the plugin palette, you can delete the old `oldtale` folder inside `bb theme dir`.
+Keep that folder until you finish the switch.
+
+## Return to the default theme
+
+```sh
+bb theme reset
+```
+
+To remove the plugin after the reset:
+
+```sh
+bb plugin remove oldtale-theme
+```
+
+## Development
+
+```sh
+git clone https://github.com/briginas/bb-plugin-oldtale-theme.git
+cd bb-plugin-oldtale-theme
+npm ci
+npm run check
+```
+
+The checks cover TypeScript, the BB plugin build, packaged assets, and preservation of the original code and ANSI colors.
+The project pins Plugin SDK 0.6.37 and the BB build CLI 0.46.0.
+The build emits the server bundle and metadata under `dist/`.
+Git installations build from source through the installed BB CLI.
+
+For a local installation:
+
+```sh
+bb plugin install .
+bb theme set plugin:oldtale-theme:oldtale
+```
+
+After CSS or JSON changes, reload the plugin:
+
+```sh
+bb plugin reload oldtale-theme
+```
+
+Use [Theme Preview](https://getbb.app/marketplace/theme-preview) to inspect both modes, components, diffs, and contrast measurements.
+
+## Source and license
+
+The source theme is fixed at commit
 [`e96caad130033e5ec6b72d8aa91c7a138bc34116`](https://github.com/briginas/webstorm-oldtale-dark-theme/tree/e96caad130033e5ec6b72d8aa91c7a138bc34116).
-Правила синтаксиса, семантические цвета и цвета diff в `pierre-dark.json` сохранены.
-Лицензия MIT и уведомления об исходных проектах находятся в `LICENSE` и
-`THIRD_PARTY_NOTICES.md`.
+See [UPSTREAM.md](UPSTREAM.md) for the adaptation details and original file.
+
+MIT licensed. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
