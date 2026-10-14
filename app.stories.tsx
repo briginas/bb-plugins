@@ -374,7 +374,7 @@ function FooterPreview({ scenario }: { scenario: ScenarioName }) {
   return (
     <div className="w-[303px] overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground">
       <ProviderUsageStatusContent
-        pluginId="bb--provider-usage"
+        pluginId="provider-remaining"
         dismiss={() => {}}
         snapshot={storySnapshot(scenario)}
         threadMachineId={null}
@@ -493,7 +493,7 @@ function LivePreview({ machine }: { machine: UsageMachine }) {
   return (
     <div className="w-[303px] overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground">
       <ProviderUsageStatusContent
-        pluginId="bb--provider-usage"
+        pluginId="provider-remaining"
         dismiss={() => {}}
         snapshot={{
           data: { machines: [machine] },
