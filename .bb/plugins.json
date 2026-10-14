@@ -6,6 +6,10 @@
     {
       "name": "provider-remaining",
       "source": "./plugins/provider-remaining"
+    },
+    {
+      "name": "oldtale-theme",
+      "source": "./plugins/oldtale-theme"
     }
   ]
 }

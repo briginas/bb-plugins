@@ -1,0 +1,30 @@
+name: Check Oldtale Theme
+
+on:
+  push:
+    paths:
+      - 'plugins/oldtale-theme/**'
+      - '.github/workflows/oldtale-theme.yml'
+  pull_request:
+    paths:
+      - 'plugins/oldtale-theme/**'
+      - '.github/workflows/oldtale-theme.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugins/oldtale-theme
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: plugins/oldtale-theme/package-lock.json
+      - run: npm ci
+      - run: npm run check
