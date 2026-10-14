@@ -57,6 +57,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/briginas/bb-plugin-provider-remaining.git"
+    "url": "https://github.com/briginas/bb-plugins.git",
+    "directory": "plugins/provider-remaining"
   }
 }

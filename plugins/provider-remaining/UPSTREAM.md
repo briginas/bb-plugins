@@ -32,3 +32,11 @@ same upstream commit, under the same MIT license:
 - `components/ui/hooks/use-media-query.ts`
 - `components/ui/hooks/use-pointer-coarse.ts`
 - `lib/utils.ts`
+
+## Monorepository migration
+
+The plugin moved from [`briginas/bb-plugin-provider-remaining`](https://github.com/briginas/bb-plugin-provider-remaining)
+to `plugins/provider-remaining/` in [`briginas/bb-plugins`](https://github.com/briginas/bb-plugins).
+The monorepository preserves all four commits through `682a07d`.
+The package name, plugin ID, version `0.1.0`, and implementation remain the same.
+The migration changes the directory structure, repository metadata, and installation instructions.
