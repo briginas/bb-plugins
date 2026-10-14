@@ -1,0 +1,177 @@
+/* Oldtale for BB 0.46+
+ * Palette: briginas/webstorm-oldtale-dark-theme @ e96caad
+ * See LICENSE and THIRD_PARTY_NOTICES.md.
+ * Light mode is a companion adaptation; dark mode follows the source palette.
+ */
+:root,
+.light {
+  --canvas: #f5f5f7;
+  --ink: #2b2d30;
+  --primary: #2f66d6;
+  --primary-foreground: #ffffff;
+  --muted-foreground: #595c65;
+  --subtle-foreground: #656973;
+  --readback-foreground: #60646d;
+
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: var(--card);
+  --popover-foreground: var(--ink);
+  --secondary: #e8e9ed;
+  --secondary-foreground: var(--ink);
+  --accent: var(--secondary);
+  --accent-foreground: var(--ink);
+  --muted: #e1e3e8;
+  --border: #cdd0d5;
+  --border-hairline: var(--border);
+  --border-seam: #dfe1e5;
+  --border-seam-vertical: var(--border-seam);
+  --input: #9ea0a8;
+  --surface-recessed: #eceef1;
+  --surface-raised: #ffffff;
+  --surface-scrim: #f5f5f7eb;
+  --state-hover: #2b2d3010;
+  --state-active: #2b2d301b;
+  --surface-selected: #2f66d618;
+  --surface-selected-border: #2f66d660;
+
+  --sidebar: #eceef1;
+  --sidebar-foreground: var(--ink);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-border: var(--border-seam);
+  --ring: var(--primary);
+  --sidebar-ring: var(--primary);
+
+  --destructive: #a53b48;
+  --destructive-foreground: #ffffff;
+  --destructive-text: #a53b48;
+  --warning: #82651f;
+  --warning-text: #82651f;
+  --attention: #82651f;
+  --success: #426b54;
+  --diff-added: #426b54;
+  --diff-removed: #a53b48;
+  --pr-merged: #75649c;
+  --file-accent: #2f66d6;
+
+  /* ANSI colors in light mode retain the hues with stronger contrast. */
+  --ansi-0: #1e1f22;
+  --ansi-1: #a53b48;
+  --ansi-2: #426b54;
+  --ansi-3: #82651f;
+  --ansi-4: #485d95;
+  --ansi-5: #945782;
+  --ansi-6: #146e67;
+  --ansi-7: #bcbec3;
+  --ansi-8: #656973;
+  --ansi-9: #b84a46;
+  --ansi-10: #477254;
+  --ansi-11: #886617;
+  --ansi-12: #526ba8;
+  --ansi-13: #a64470;
+  --ansi-14: #227080;
+  --ansi-15: #ffffff;
+}
+
+.dark {
+  color-scheme: dark;
+  --canvas: #1e1f22;
+  --ink: #aaa7b0;
+  --primary: #6a9bfa;
+  --primary-foreground: #141415;
+  --muted-foreground: #9ea0a8;
+  --subtle-foreground: #92969f;
+  --readback-foreground: #989ca5;
+
+  --card: #26282d;
+  --secondary: #2b2d30;
+  --muted: #323438;
+  --border: #393b40;
+  --border-seam: #2b2d30;
+  --input: #4f5156;
+  --surface-recessed: #141415;
+  --surface-raised: #2b2d30;
+  --surface-scrim: #2b2d30eb;
+  --state-hover: #dfe1e50a;
+  --state-active: #dfe1e515;
+  --surface-selected: #2e436e;
+  --surface-selected-border: #3574f0;
+  --sidebar: #2b2d30;
+  --sidebar-foreground: #dfe1e5;
+  --sidebar-accent: #393b40;
+  --sidebar-accent-foreground: #dfe1e5;
+
+  --destructive: #db5c5c;
+  --destructive-foreground: #141415;
+  --destructive-text: #bf7c76;
+  --warning: #c29e49;
+  --warning-text: #c29e49;
+  --attention: #f2c55c;
+  --success: #799f8a;
+  --diff-added: #799f8a;
+  --diff-removed: #bf7c76;
+  --pr-merged: #9a8dbf;
+  --file-accent: #cc9c86;
+
+  /* Exact terminal palette from the upstream theme. */
+  --ansi-0: #1e1f22;
+  --ansi-1: #bf7c76;
+  --ansi-2: #799f8a;
+  --ansi-3: #ba9752;
+  --ansi-4: #7f91bf;
+  --ansi-5: #d68abc;
+  --ansi-6: #13988d;
+  --ansi-7: #bcbec3;
+  --ansi-8: #6f737a;
+  --ansi-9: #f5938d;
+  --ansi-10: #94c0a4;
+  --ansi-11: #f2c55c;
+  --ansi-12: #8fa3d6;
+  --ansi-13: #e977a6;
+  --ansi-14: #55b6c8;
+  --ansi-15: #ffffff;
+}
+
+/* Text on ANSI background fills, selected for contrast in each mode. */
+:root,
+.light {
+  --ansi-bg-fg-0: #ffffff;
+  --ansi-bg-fg-1: #ffffff;
+  --ansi-bg-fg-2: #ffffff;
+  --ansi-bg-fg-3: #ffffff;
+  --ansi-bg-fg-4: #ffffff;
+  --ansi-bg-fg-5: #ffffff;
+  --ansi-bg-fg-6: #ffffff;
+  --ansi-bg-fg-7: #000000;
+  --ansi-bg-fg-8: #ffffff;
+  --ansi-bg-fg-9: #ffffff;
+  --ansi-bg-fg-10: #ffffff;
+  --ansi-bg-fg-11: #ffffff;
+  --ansi-bg-fg-12: #ffffff;
+  --ansi-bg-fg-13: #ffffff;
+  --ansi-bg-fg-14: #ffffff;
+  --ansi-bg-fg-15: #000000;
+}
+.dark {
+  --ansi-bg-fg-0: #ffffff;
+  --ansi-bg-fg-1: #000000;
+  --ansi-bg-fg-2: #000000;
+  --ansi-bg-fg-3: #000000;
+  --ansi-bg-fg-4: #000000;
+  --ansi-bg-fg-5: #000000;
+  --ansi-bg-fg-6: #000000;
+  --ansi-bg-fg-7: #000000;
+  --ansi-bg-fg-8: #ffffff;
+  --ansi-bg-fg-9: #000000;
+  --ansi-bg-fg-10: #000000;
+  --ansi-bg-fg-11: #000000;
+  --ansi-bg-fg-12: #000000;
+  --ansi-bg-fg-13: #000000;
+  --ansi-bg-fg-14: #000000;
+  --ansi-bg-fg-15: #000000;
+}
