@@ -53,6 +53,12 @@ import {
 } from "./usage-feedback.js";
 
 import { UsageSettings } from "./settings.js";
+import { ALL_PROVIDERS_TAB_ID, selectUsageTab } from "./usage-selection.js";
+import {
+  FOOTER_BADGE_ICON,
+  ProviderRemainingIcon,
+  updateFooterBadge,
+} from "./footer-badge.js";
 
 export interface UsageStoreSnapshot {
   data: UsageSnapshot | null;
@@ -60,7 +66,6 @@ export interface UsageStoreSnapshot {
   isRefreshing: boolean;
 }
 
-const ALL_PROVIDERS_TAB_ID = "all";
 const CARD_MAX_AGE_MS = 2 * 60_000;
 const FOCUS_MAX_AGE_MS = 5 * 60_000;
 const SAFETY_REFRESH_INTERVAL_MS = 30 * 60_000;
@@ -98,6 +103,58 @@ function subscribeStore(listener: () => void): () => void {
 
 function getStoreSnapshot(): UsageStoreSnapshot {
   return storeSnapshot;
+}
+
+const refreshSubscriptions = new Map<
+  string,
+  { count: number; dispose: () => void }
+>();
+
+function useUsageRefresh(
+  pluginId: string,
+  machineId: string | null,
+  providerKey: string,
+  enabled = true,
+) {
+  useEffect(() => {
+    if (!enabled || machineId === null || providerKey === "") return;
+    const key = JSON.stringify([pluginId, machineId, providerKey]);
+    let subscription = refreshSubscriptions.get(key);
+    if (subscription === undefined) {
+      const controller = new AbortController();
+      const refresh = () => {
+        if (document.visibilityState === "hidden") return;
+        void refreshUsage({
+          pluginId,
+          force: false,
+          machineIds: [machineId],
+          providerIds: providerKey.split("\n"),
+          maxAgeMs: CARD_MAX_AGE_MS,
+          signal: controller.signal,
+        });
+      };
+      const timer = window.setInterval(refresh, CARD_MAX_AGE_MS);
+      window.addEventListener("focus", refresh);
+      subscription = {
+        count: 0,
+        dispose: () => {
+          controller.abort();
+          window.clearInterval(timer);
+          window.removeEventListener("focus", refresh);
+        },
+      };
+      refreshSubscriptions.set(key, subscription);
+      refresh();
+    }
+    subscription.count += 1;
+    return () => {
+      subscription.count -= 1;
+      if (subscription.count === 0) {
+        subscription.dispose();
+        refreshSubscriptions.delete(key);
+      }
+    };
+  }, [pluginId, machineId, providerKey, enabled]);
 }
 
 function rpcErrorMessage(body: unknown): string | null {
@@ -584,9 +641,10 @@ export function ProviderUsageStatusContent({
     ],
     [providers, showAllTab],
   );
-  const activeTabId = tabIds.includes(requestedProviderId ?? "")
-    ? requestedProviderId
-    : (tabIds[0] ?? null);
+  const activeTabId = selectUsageTab(
+    activeMachine?.providers ?? [],
+    requestedProviderId,
+  ).tabId;
   const isAllTab = activeTabId === ALL_PROVIDERS_TAB_ID;
   const activeProvider = isAllTab
     ? null
@@ -652,27 +710,7 @@ export function ProviderUsageStatusContent({
       : [activeProviderId];
   const refreshProviderKey = refreshProviderIds.join("\n");
 
-  useEffect(() => {
-    if (!refreshEnabled) return;
-    if (activeMachineId === null || refreshProviderKey === "") return;
-    const refresh = () => {
-      if (document.visibilityState === "hidden") return;
-      void refreshUsage({
-        pluginId,
-        force: false,
-        machineIds: [activeMachineId],
-        providerIds: refreshProviderKey.split("\n"),
-        maxAgeMs: CARD_MAX_AGE_MS,
-      });
-    };
-    refresh();
-    const timer = window.setInterval(refresh, CARD_MAX_AGE_MS);
-    window.addEventListener("focus", refresh);
-    return () => {
-      window.clearInterval(timer);
-      window.removeEventListener("focus", refresh);
-    };
-  }, [activeMachineId, pluginId, refreshProviderKey, refreshEnabled]);
+  useUsageRefresh(pluginId, activeMachineId, refreshProviderKey, refreshEnabled);
 
   const selectMachine = useCallback(
     (machineId: string) => {
@@ -683,6 +721,7 @@ export function ProviderUsageStatusContent({
           window.localStorage.setItem(machineSelectionStorageKey, machineId);
         } catch {}
       }
+      updateStore({ ...storeSnapshot });
     },
     [machineSelectionStorageKey],
   );
@@ -690,14 +729,13 @@ export function ProviderUsageStatusContent({
   const selectProvider = useCallback(
     (providerId: string) => {
       if (activeMachine === null) return;
-      setRequestedProviderIds((current) => {
-        const next = new Map(current);
-        next.set(activeMachine.id, providerId);
-        lastProviderIdByMachine = next;
-        return next;
-      });
+      const next = new Map(requestedProviderIds);
+      next.set(activeMachine.id, providerId);
+      lastProviderIdByMachine = next;
+      setRequestedProviderIds(next);
+      updateStore({ ...storeSnapshot });
     },
-    [activeMachine],
+    [activeMachine, requestedProviderIds],
   );
 
   const reload = () => {
@@ -925,6 +963,52 @@ export function ProviderUsageStatusContent({
   );
 }
 
+function useThreadMachineId() {
+  const { threadId } = useBbContext();
+  const sidebarThreads = experimental_useSidebarThreads();
+  return useMemo(
+    () =>
+      sidebarThreads.threads.find((thread) => thread.id === threadId)?.host
+        ?.id ?? null,
+    [sidebarThreads.threads, threadId],
+  );
+}
+
+// The host mounts this slot even while the footer disclosure is closed.
+// It supplies plugin context that a globally registered icon does not have.
+function ProviderRemainingRefresh() {
+  const pluginId = experimental_usePluginId();
+  const snapshot = useSyncExternalStore(
+    subscribeStore,
+    getStoreSnapshot,
+    getStoreSnapshot,
+  );
+  const threadMachineId = useThreadMachineId();
+  const machine = selectUsageMachine(
+    snapshot.data?.machines ?? [],
+    readSelectedMachine(`bb.${pluginId}.selected-machine.v1`),
+    threadMachineId,
+  );
+  const selection = selectUsageTab(
+    machine?.providers ?? [],
+    machine === null ? null : (lastProviderIdByMachine.get(machine.id) ?? null),
+  );
+  useUsageRefresh(
+    pluginId,
+    machine?.id ?? null,
+    selection.providerIds.join("\n"),
+  );
+  useEffect(() => {
+    updateFooterBadge(
+      selection.accounts,
+      snapshot.error !== null ||
+        machine?.error != null ||
+        machine?.status === "disconnected",
+    );
+  }, [selection.accounts, snapshot.error, machine]);
+  return null;
+}
+
 function ProviderUsageStatus(props: ExperimentalSidebarFooterDisclosureProps) {
   const pluginId = experimental_usePluginId();
   const snapshot = useSyncExternalStore(
@@ -932,14 +1016,7 @@ function ProviderUsageStatus(props: ExperimentalSidebarFooterDisclosureProps) {
     getStoreSnapshot,
     getStoreSnapshot,
   );
-  const { threadId } = useBbContext();
-  const sidebarThreads = experimental_useSidebarThreads();
-  const threadMachineId = useMemo(
-    () =>
-      sidebarThreads.threads.find((thread) => thread.id === threadId)?.host
-        ?.id ?? null,
-    [sidebarThreads.threads, threadId],
-  );
+  const threadMachineId = useThreadMachineId();
   return (
     <ProviderUsageStatusContent
       {...props}
@@ -952,12 +1029,20 @@ function ProviderUsageStatus(props: ExperimentalSidebarFooterDisclosureProps) {
 }
 
 export default definePluginApp((app) => {
+  app.experimental_icons.register({
+    name: FOOTER_BADGE_ICON,
+    component: ProviderRemainingIcon,
+  });
+  app.slots.experimental_appOverlay({
+    id: "quota-refresh",
+    component: ProviderRemainingRefresh,
+  });
   app.slots.settingsSection({ id: "usage", component: UsageSettings });
   app.experimental_sidebarFooter.register({
     kind: "disclosure",
     id: "usage",
     label: "Provider remaining",
-    icon: "ChartColumn",
+    icon: FOOTER_BADGE_ICON,
     component: ProviderUsageStatus,
   });
   app.contentScripts.register({

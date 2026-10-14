@@ -33,6 +33,19 @@ To hide its shortcut, right-click **Provider usage** in the sidebar footer and c
 
 ## Quota display
 
+The footer icon has a corner badge with the lowest remaining percentage across
+the accounts and quota windows in the selected sidebar tab and source.
+The **All** tab includes every provider in that source.
+The badge omits the percent sign to fit the icon. Click the icon for details.
+It shows **—** when no quota measurement is available.
+A dotted underline marks a retained measurement after a refresh failure or
+when the selected machine is offline.
+
+The selected tab refreshes every two minutes while the app is visible, even
+with the sidebar card closed. The card and badge share one refresh timer.
+The app also checks source inventory every 30 minutes and after returning
+from at least five minutes of inactivity.
+
 Each quota window shows a percentage, a bar, and its reset time.
 Both the sidebar and settings calculate the remaining percentage with:
 

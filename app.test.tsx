@@ -14,6 +14,7 @@ afterEach(() => {
   localStorage.clear();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  vi.useRealTimers();
 });
 
 function threadOnMachine(
@@ -226,7 +227,7 @@ describe("provider usage footer disclosure", () => {
       kind: "disclosure",
       id: "usage",
       label: "Provider remaining",
-      icon: "ChartColumn",
+      icon: "provider-remaining-quota",
     });
     if (item?.kind !== "disclosure") throw new Error("missing disclosure");
 
@@ -244,6 +245,13 @@ describe("provider usage footer disclosure", () => {
         }),
       ),
     );
+    const background = renderSlot(app.appOverlays[0]!, {}, {
+      pluginId: "provider-remaining",
+      context: { threadId: "thread-active" },
+      sidebarThreads: { threads: [threadOnMachine("host-m5", "M5")] },
+    });
+    const icon = renderSlot(app.icons[0]!, { className: "size-4" });
+    await waitFor(() => expect(icon.getByText("3")).toBeTruthy());
     const dismiss = vi.fn();
     const slot = renderSlot(
       item,
@@ -322,12 +330,14 @@ describe("provider usage footer disclosure", () => {
       slot.getByRole("heading", { name: "claude@example.com" }),
     ).toBeTruthy();
     expect(slot.getByText("18%")).toBeTruthy();
+    await waitFor(() => expect(icon.getByText("18")).toBeTruthy());
 
     fireEvent.click(codexTab);
     expect(
       slot.getByRole("heading", { name: "codex@example.com" }),
     ).toBeTruthy();
     expect(slot.getByText("63%")).toBeTruthy();
+    await waitFor(() => expect(icon.getByText("63")).toBeTruthy());
     fireEvent.keyDown(codexTab, { key: "ArrowLeft" });
     expect(claudeTab.getAttribute("aria-selected")).toBe("true");
 
@@ -467,6 +477,8 @@ describe("provider usage footer disclosure", () => {
       );
     }
     expect(diagnostics).toHaveBeenCalledTimes(3);
+    background.lifecycle.unmount();
+    icon.lifecycle.unmount();
     await mounted.lifecycle.dispose();
   }, 15_000);
 });
