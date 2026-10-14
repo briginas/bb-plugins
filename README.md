@@ -106,14 +106,13 @@ bb plugin install 'git:https://github.com/briginas/bb-plugins.git@^0.1.0' --plug
 
 ## Migration and licenses
 
-The repository preserves the Git history from [`briginas/bb-plugin-provider-remaining`](https://github.com/briginas/bb-plugin-provider-remaining).
-The migration moves that plugin into `plugins/provider-remaining/` at version `0.1.0`.
-Its [upstream provenance](plugins/provider-remaining/UPSTREAM.md) records the original BB source.
+All plugins now live in this repository under `plugins/`.
+The separate plugin repositories no longer exist.
+This repository preserves the Git history of Provider Remaining and Oldtale Theme.
+Both plugins entered this repository at version `0.1.0`.
+UI Align moved from a local directory at version `0.1.1`.
 
-The repository also preserves the Git history from [`briginas/bb-plugin-oldtale-theme`](https://github.com/briginas/bb-plugin-oldtale-theme).
-The migration adds that plugin under `plugins/oldtale-theme/` and sets its version to `0.1.0`.
-Its [upstream provenance](plugins/oldtale-theme/UPSTREAM.md) records the source palette and migration.
+The provenance records describe the [original BB source](plugins/provider-remaining/UPSTREAM.md) and the [Oldtale palette and migration](plugins/oldtale-theme/UPSTREAM.md).
 
-Each plugin keeps its license in its own directory.
-
-UI Align moved from the local `bb-plugin-ui-align` directory into `plugins/ui-align/` at version `0.1.1`.
+Provider Remaining and Oldtale Theme use the MIT license.
+Their license files remain in their plugin directories: [Provider Remaining](plugins/provider-remaining/LICENSE) and [Oldtale Theme](plugins/oldtale-theme/LICENSE).
