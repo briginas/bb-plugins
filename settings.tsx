@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { providerUsageRpcContract } from "./server.js";
+import { remainingPercent, usageBarColorClass } from "./usage-format.js";
 import {
   emptyUsageMessage,
   hasReportedUsage,
@@ -41,16 +42,6 @@ interface ProviderConfig {
   signInHint: string;
   expiredHint: string;
   provider: UsageProvider;
-}
-
-function barColorClass(usedPercent: number): string {
-  if (usedPercent >= 95) {
-    return "bg-destructive";
-  }
-  if (usedPercent >= 80) {
-    return "bg-warning";
-  }
-  return "bg-primary";
 }
 
 function formatReset(resetsAt: string | null): string | null {
@@ -100,34 +91,43 @@ function formatUsdCents(cents: number, alwaysShowCents: boolean): string {
   }).format(cents / 100);
 }
 
-function usageWindowValue(window: UsageWindow): string {
-  if (!window.cost) {
-    return `${window.usedPercent}% used`;
-  }
-  return `${formatUsdCents(window.cost.usedUsdCents, true)} / ${formatUsdCents(window.cost.limitUsdCents, false)}`;
-}
-
 function UsageWindowRow({ window }: { window: UsageWindow }) {
   const reset = formatReset(window.resetsAt);
+  const remaining = remainingPercent(window.usedPercent);
+  const value = `${Math.round(remaining)}% remaining`;
   return (
-    <div className="space-y-1">
+    <div className="space-y-1" title={`${window.label}: ${value}`}>
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-xs text-foreground">{window.label}</span>
         <span className="text-xs tabular-nums text-muted-foreground">
-          {usageWindowValue(window)}
+          {value}
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+      <div
+        role="progressbar"
+        aria-label={`${window.label} remaining`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={remaining}
+        aria-valuetext={value}
+        className="h-1.5 w-full overflow-hidden rounded-full bg-muted"
+      >
         <div
           className={cn(
             "h-full rounded-full",
-            barColorClass(window.usedPercent),
+            usageBarColorClass(window.usedPercent),
           )}
           style={{
-            width: `${Math.min(100, Math.max(window.usedPercent, 2))}%`,
+            width: `${remaining}%`,
           }}
         />
       </div>
+      {window.cost ? (
+        <p className="text-xs tabular-nums text-muted-foreground">
+          {formatUsdCents(window.cost.usedUsdCents, true)} /{" "}
+          {formatUsdCents(window.cost.limitUsdCents, false)} spent
+        </p>
+      ) : null}
       {reset ? <p className="text-xs text-muted-foreground">{reset}</p> : null}
     </div>
   );
@@ -415,11 +415,11 @@ export function UsageSettingsContent({
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-1.5">
             <h2 className="min-w-0 text-sm font-semibold text-foreground">
-              Usage limits
+              Remaining quota
             </h2>
           </div>
           <p className="mt-0.5 text-xs leading-snug text-subtle-foreground/75">
-            Your provider subscription usage.
+            Your remaining provider subscription quota.
           </p>
         </div>
         <div className="shrink-0 self-start">

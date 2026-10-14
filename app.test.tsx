@@ -225,7 +225,7 @@ describe("provider usage footer disclosure", () => {
     expect(item).toMatchObject({
       kind: "disclosure",
       id: "usage",
-      label: "Provider usage",
+      label: "Provider remaining",
       icon: "ChartColumn",
     });
     if (item?.kind !== "disclosure") throw new Error("missing disclosure");
@@ -295,7 +295,7 @@ describe("provider usage footer disclosure", () => {
     expect(
       slot.getByRole("heading", { name: "codex@example.com" }),
     ).toBeTruthy();
-    expect(slot.getByText("97%")).toBeTruthy();
+    expect(slot.getByText("3%")).toBeTruthy();
     expect(
       localStorage.getItem("bb.provider-remaining.selected-machine.v1"),
     ).toBe("host-m5");
@@ -321,13 +321,13 @@ describe("provider usage footer disclosure", () => {
     expect(
       slot.getByRole("heading", { name: "claude@example.com" }),
     ).toBeTruthy();
-    expect(slot.getByText("82%")).toBeTruthy();
+    expect(slot.getByText("18%")).toBeTruthy();
 
     fireEvent.click(codexTab);
     expect(
       slot.getByRole("heading", { name: "codex@example.com" }),
     ).toBeTruthy();
-    expect(slot.getByText("37%")).toBeTruthy();
+    expect(slot.getByText("63%")).toBeTruthy();
     fireEvent.keyDown(codexTab, { key: "ArrowLeft" });
     expect(claudeTab.getAttribute("aria-selected")).toBe("true");
 
@@ -342,11 +342,11 @@ describe("provider usage footer disclosure", () => {
       ),
     ).toBeTruthy();
     fireEvent.click(
-      slot.getByRole("button", { name: "Collapse provider usage" }),
+      slot.getByRole("button", { name: "Collapse provider remaining" }),
     );
     expect(dismiss).toHaveBeenCalledOnce();
     const reloadButton = slot.getByRole("button", {
-      name: "Reload provider usage",
+      name: "Reload provider remaining",
     }) as HTMLButtonElement;
     await waitFor(() => expect(reloadButton.disabled).toBe(false));
     const callsBeforeManualRefresh = fetchMock.mock.calls.length;
@@ -402,6 +402,12 @@ describe("provider usage footer disclosure", () => {
       poolCodexTab.querySelector("[data-provider-logo*='/codex/']"),
     ).not.toBeNull();
     expect(poolCodexTab.querySelector("[data-provider-usage-tone]")).toBeNull();
+    expect(poolCodexTab.title).toBe(
+      "Codex: an account quota window has 20% or less remaining.",
+    );
+    expect(slot.getByRole("tab", { name: "Claude Code" }).title).toBe(
+      "Claude Code: an account quota window has 5% or less remaining.",
+    );
     expect(
       slot
         .getByRole("tab", { name: "Claude Code" })
@@ -409,17 +415,17 @@ describe("provider usage footer disclosure", () => {
     ).not.toBeNull();
     expect(slot.getAllByText("team@example.com")).toHaveLength(1);
     expect(slot.getAllByText("personal@example.com")).toHaveLength(1);
-    expect(slot.getByText("46%")).toBeTruthy();
+    expect(slot.getByText("54%")).toBeTruthy();
     expect(slot.getByText("2d 3h")).toBeTruthy();
     expect(
       slot.getAllByRole("heading").map((heading) => heading.textContent),
     ).toEqual(["team@example.com", "personal@example.com"]);
     const windowButton = slot.getByRole("button", {
-      name: "Weekly limit: 46% used. Reset time not reported",
+      name: "Weekly limit: 54% remaining. Reset time not reported",
     });
     fireEvent.click(windowButton);
     expect(slot.getByText("Reset time not reported.")).toBeTruthy();
-    expect(slot.getByText("82%")).toBeTruthy();
+    expect(slot.getByText("18%")).toBeTruthy();
     fireEvent.click(slot.getByRole("tab", { name: "Claude Code" }));
     expect(slot.getByText("claude-team@example.com")).toBeTruthy();
     expect(slot.queryByText("personal@example.com")).toBeNull();
@@ -434,13 +440,13 @@ describe("provider usage footer disclosure", () => {
       await waitFor(() =>
         expect(
           slot
-            .getByRole("button", { name: "Reload provider usage" })
+            .getByRole("button", { name: "Reload provider remaining" })
             .hasAttribute("disabled"),
         ).toBe(false),
       );
       fetchMock.mockResolvedValueOnce(failure());
       fireEvent.click(
-        slot.getByRole("button", { name: "Reload provider usage" }),
+        slot.getByRole("button", { name: "Reload provider remaining" }),
       );
       await waitFor(() =>
         expect(
@@ -452,7 +458,7 @@ describe("provider usage footer disclosure", () => {
         slot.queryByText(/Unexpected token|bb connect|invalid JSON/i),
       ).toBeNull();
       fireEvent.click(
-        slot.getByRole("button", { name: "Reload provider usage" }),
+        slot.getByRole("button", { name: "Reload provider remaining" }),
       );
       await waitFor(() =>
         expect(
@@ -540,7 +546,7 @@ it.each([
     expect(slot.getByText(expected, { exact: false })).toBeTruthy(),
   );
   if (state === "source-error") {
-    expect(slot.getByText("42%")).toBeTruthy();
+    expect(slot.getByText("58%")).toBeTruthy();
     expect(slot.queryByText("private backend error")).toBeNull();
     expect(
       slot.queryByRole("button", { name: "Retry usage refresh" }),
@@ -626,15 +632,15 @@ it("keeps a measured refresh when an older snapshot response arrives late", asyn
   );
   await new Promise((resolve) => setTimeout(resolve, 0));
   releaseInventory!();
-  await waitFor(() => expect(slot.getByText("37%")).toBeTruthy());
+  await waitFor(() => expect(slot.getByText("63%")).toBeTruthy());
   await waitFor(() =>
     expect(
       slot
-        .getByRole("button", { name: "Reload provider usage" })
+        .getByRole("button", { name: "Reload provider remaining" })
         .hasAttribute("disabled"),
     ).toBe(false),
   );
   expect(slot.queryByText("Usage not reported.")).toBeNull();
-  expect(slot.getByText("37%")).toBeTruthy();
+  expect(slot.getByText("63%")).toBeTruthy();
   await mounted.lifecycle.dispose();
 });

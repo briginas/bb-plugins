@@ -8,7 +8,7 @@ import type {
   UsageSnapshot,
 } from "./usage-schema.js";
 
-export default { title: "plugins/Provider usage" };
+export default { title: "plugins/Provider remaining" };
 
 function svgDataUrl(svg: string): string {
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;

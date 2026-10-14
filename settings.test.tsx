@@ -164,7 +164,7 @@ it("retains measured accounts when reloading fails", async () => {
   fireEvent.click(slot.getByLabelText("Reload usage data"));
   await slot.findByText(/Showing last update/);
   expect(slot.getByText("first@example.com")).toBeTruthy();
-  expect(slot.getByText("42% used")).toBeTruthy();
+  expect(slot.getByText("58% remaining")).toBeTruthy();
 });
 
 it("shows pending measurements without inventing usage, then reports an unavailable account gracefully", async () => {
@@ -196,7 +196,7 @@ it("shows pending measurements without inventing usage, then reports an unavaila
     },
   );
   await slot.findByText("Loading usage…");
-  expect(slot.queryByText("0% used")).toBeNull();
+  expect(slot.queryByText("100% remaining")).toBeNull();
   finish();
   await slot.findByText("Couldn’t load usage.");
   expect(slot.getByText("Usage unavailable.")).toBeTruthy();
@@ -232,5 +232,5 @@ it("keeps authentication and plans without limits distinct from loading and erro
   expect(
     slot.getByText("No usage limits reported for this plan."),
   ).toBeTruthy();
-  expect(slot.queryByText("0% used")).toBeNull();
+  expect(slot.queryByText("100% remaining")).toBeNull();
 });

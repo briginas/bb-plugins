@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import {
   formatUsageReset,
   formatUsdCents,
+  remainingPercent,
   usageBarColorClass,
 } from "./usage-format.js";
 import { LIST_HOVER_TRANSITION } from "@/components/ui/motion";
@@ -271,17 +272,19 @@ function UsageWindow({ window }: { window: UsageWindowValue }) {
   const [showReset, setShowReset] = useState(false);
   const reset = formatUsageReset(window.resetsAt);
   const countdown = formatResetCountdown(window.resetsAt);
-  const value =
+  const remaining = remainingPercent(window.usedPercent);
+  const value = Math.round(remaining) + "% remaining";
+  const spending =
     window.cost === null
-      ? Math.round(window.usedPercent) + "% used"
+      ? null
       : formatUsdCents(window.cost.usedUsdCents, true) +
         " / " +
-        formatUsdCents(window.cost.limitUsdCents, false);
+        formatUsdCents(window.cost.limitUsdCents, false) + " spent";
   return (
     <button
       type="button"
       className="col-span-full grid grid-cols-subgrid rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-      title={`${window.label} · ${reset ?? "Reset time not reported"}`}
+      title={`${window.label}: ${value} · ${reset ?? "Reset time not reported"}`}
       aria-label={`${window.label}: ${value}. ${reset ?? "Reset time not reported"}`}
       aria-expanded={showReset}
       onClick={() => setShowReset((shown) => !shown)}
@@ -290,14 +293,22 @@ function UsageWindow({ window }: { window: UsageWindowValue }) {
         <span className="max-w-20 truncate text-subtle-foreground">
           {shortWindowLabel(window.label)}
         </span>
-        <span className="h-1 min-w-0 overflow-hidden rounded-full bg-sidebar-border">
+        <span
+          role="progressbar"
+          aria-label={`${window.label} remaining`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={remaining}
+          aria-valuetext={value}
+          className="h-1 min-w-0 overflow-hidden rounded-full bg-sidebar-border"
+        >
           <span
             className={
               "block h-full rounded-full " +
               usageBarColorClass(window.usedPercent)
             }
             style={{
-              width: Math.max(2, Math.min(100, window.usedPercent)) + "%",
+              width: remaining + "%",
             }}
           />
         </span>
@@ -307,7 +318,7 @@ function UsageWindow({ window }: { window: UsageWindowValue }) {
             usageToneTextClass(window.usedPercent),
           )}
         >
-          {Math.round(window.usedPercent)}%
+          {Math.round(remaining)}%
         </span>
         <span
           aria-hidden="true"
@@ -319,7 +330,7 @@ function UsageWindow({ window }: { window: UsageWindowValue }) {
       {showReset ? (
         <span className="col-span-full pb-1 text-2xs text-subtle-foreground">
           {reset ?? "Reset time not reported."}
-          {window.cost === null ? "" : ` · ${value}`}
+          {spending === null ? "" : ` · ${spending}`}
         </span>
       ) : null}
     </button>
@@ -733,12 +744,12 @@ export function ProviderUsageStatusContent({
       >
         {providers.length < 2 ? (
           <span className="px-1.5 text-2xs font-medium text-sidebar-foreground">
-            Usage
+            Remaining
           </span>
         ) : (
           <div
             role="tablist"
-            aria-label="Usage provider"
+            aria-label="Quota provider"
             className="flex min-w-0 shrink items-center gap-0.5 overflow-x-auto"
           >
             {showAllTab ? (
@@ -781,7 +792,7 @@ export function ProviderUsageStatusContent({
                   title={
                     tone === null
                       ? provider.displayName
-                      : `${provider.displayName}: an account usage window is at least ${tone === "critical" ? "95" : "80"}% used.`
+                      : `${provider.displayName}: an account quota window has ${tone === "critical" ? "5" : "20"}% or less remaining.`
                   }
                   aria-label={provider.displayName}
                   aria-selected={isActive}
@@ -835,7 +846,7 @@ export function ProviderUsageStatusContent({
         </div>
         <button
           type="button"
-          aria-label="Reload provider usage"
+          aria-label="Reload provider remaining"
           disabled={snapshot.isRefreshing}
           className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:opacity-50"
           onClick={reload}
@@ -850,7 +861,7 @@ export function ProviderUsageStatusContent({
         </button>
         <button
           type="button"
-          aria-label="Collapse provider usage"
+          aria-label="Collapse provider remaining"
           className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
           onClick={dismiss}
         >
@@ -862,15 +873,15 @@ export function ProviderUsageStatusContent({
         role="tabpanel"
         aria-label={
           activeMachine === null
-            ? "Provider usage"
+            ? "Provider remaining"
             : isAllTab
-              ? activeMachine.displayName + " usage for all accounts"
+              ? activeMachine.displayName + " remaining quota for all accounts"
               : activeProvider === null
-                ? "Provider usage"
+                ? "Provider remaining"
                 : activeMachine.displayName +
                   " " +
                   activeProvider.displayName +
-                  " usage"
+                  " remaining quota"
         }
         className="min-h-0 overflow-y-auto p-2.5"
       >
@@ -945,7 +956,7 @@ export default definePluginApp((app) => {
   app.experimental_sidebarFooter.register({
     kind: "disclosure",
     id: "usage",
-    label: "Provider usage",
+    label: "Provider remaining",
     icon: "ChartColumn",
     component: ProviderUsageStatus,
   });
