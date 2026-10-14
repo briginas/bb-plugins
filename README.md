@@ -8,6 +8,7 @@ The collection manifest at [`.bb/plugins.json`](.bb/plugins.json) lists the plug
 
 - [Provider remaining](plugins/provider-remaining/README.md) (`provider-remaining`): shows the remaining provider quota in the sidebar and plugin settings.
 - [Oldtale Theme](plugins/oldtale-theme/README.md) (`oldtale-theme`): adds Oldtale colors for the interface, terminal, and code in dark and light modes.
+- [UI Align](plugins/ui-align/README.md) (`ui-align`): aligns the BB header controls with macOS window buttons when the interface is zoomed.
 
 ## Install
 
@@ -16,6 +17,7 @@ From this repository directory, install plugins by name:
 ```sh
 bb plugin install path:. --plugin provider-remaining
 bb plugin install path:. --plugin oldtale-theme
+bb plugin install path:. --plugin ui-align
 ```
 
 After this repository is published on GitHub, install from the main branch:
@@ -23,6 +25,7 @@ After this repository is published on GitHub, install from the main branch:
 ```sh
 bb plugin install git:https://github.com/briginas/bb-plugins.git@main --plugin provider-remaining
 bb plugin install git:https://github.com/briginas/bb-plugins.git@main --plugin oldtale-theme
+bb plugin install git:https://github.com/briginas/bb-plugins.git@main --plugin ui-align
 ```
 
 Each plugin keeps its existing package name and plugin ID.
@@ -57,6 +60,18 @@ npm run check
 
 The commands start from the repository root.
 GitHub Actions runs the Oldtale checks from its plugin directory.
+
+For `ui-align`:
+
+```sh
+cd plugins/ui-align
+npm ci
+npm run typecheck
+npm run build
+npm run build:fixture
+```
+
+Its README describes the browser fixture check.
 
 ## Add a plugin
 
@@ -100,3 +115,5 @@ The migration adds that plugin under `plugins/oldtale-theme/` and sets its versi
 Its [upstream provenance](plugins/oldtale-theme/UPSTREAM.md) records the source palette and migration.
 
 Each plugin keeps its license in its own directory.
+
+UI Align moved from the local `bb-plugin-ui-align` directory into `plugins/ui-align/` at version `0.1.1`.

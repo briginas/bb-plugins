@@ -1,0 +1,37 @@
+{
+  "name": "bb-plugin-ui-align",
+  "version": "0.1.1",
+  "type": "module",
+  "engines": {
+    "bb": ">=0.46",
+    "bbPluginSdk": ">=0.6.37"
+  },
+  "bb": {
+    "name": "UI Align",
+    "description": "Выравнивает верхнюю панель BB с кнопками окна macOS при увеличенном масштабе.",
+    "branding": {
+      "icon": "Settings"
+    },
+    "server": "./server.ts",
+    "app": "./app.tsx",
+    "skills": [
+      "skills"
+    ]
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@get-bb/plugin-sdk": "0.6.37",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0",
+    "hono": "^4.11.9"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "bb plugin build",
+    "build:fixture": "tsc alignment.ts --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM --skipLibCheck --outDir tests/assets"
+  }
+}

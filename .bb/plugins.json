@@ -10,6 +10,10 @@
     {
       "name": "oldtale-theme",
       "source": "./plugins/oldtale-theme"
+    },
+    {
+      "name": "ui-align",
+      "source": "./plugins/ui-align"
     }
   ]
 }

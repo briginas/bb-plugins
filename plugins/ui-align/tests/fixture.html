@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>BB UI Align — geometry checks</title>
+<style>
+  :root { font-size: 16px; }
+  body { margin: 0; font: 16px system-ui; }
+  [data-testid="app-window-title-bar"] { position: fixed; top: 0; width: 100%; height: 3rem; display: flex; align-items: center; gap: 4px; padding-left: 84px; box-sizing: border-box; }
+  [class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"] { --bb-macos-chrome-control-y: 2px; transform: translateY(var(--bb-macos-chrome-control-y)); }
+  .control-group { display: flex; align-items: center; }
+  button { width: 28px; height: 28px; }
+  #result { margin: 90px 24px; white-space: pre-wrap; }
+</style>
+<div data-testid="app-window-title-bar" class="pl-[84px]">
+  <div class="control-group [transform:translateY(var(--bb-macos-chrome-control-y))]"><button aria-label="Go back">←</button><button aria-label="Go forward">→</button></div>
+  <div class="control-group"><button data-sidebar="trigger" aria-label="Toggle sidebar" class="[transform:translateY(var(--bb-macos-chrome-control-y))]">☰</button></div>
+  <div class="control-group [transform:translateY(var(--bb-macos-chrome-control-y))]"><button data-testid="window-right-panel-toggle" aria-label="Show right panel">▥</button></div>
+</div>
+<pre id="result">Ready</pre>
+<script type="module">
+  import { mountAlignment, setPreferences } from './assets/alignment.js';
+  const originalOuterWidth = Object.getOwnPropertyDescriptor(window, 'outerWidth');
+  const tick = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  let zoom = 1;
+  Object.defineProperty(window, 'outerWidth', { configurable: true, get: () => innerWidth * zoom });
+  const controller = new AbortController();
+  const dispose = mountAlignment(controller.signal);
+  const results = [];
+  function check(condition, label) { if (!condition) throw Error(label); results.push(label); }
+  function geometry(target = 25) {
+    for (const button of document.querySelectorAll('button')) {
+      const rect = button.getBoundingClientRect();
+      check(Math.abs((rect.top + rect.height / 2) * zoom - target) < 0.02, `centre=${target}, zoom=${zoom}`);
+      check(Math.abs(rect.height - 28) < 0.01, 'button size preserved');
+    }
+  }
+  window.runChecks = async () => {
+    for (zoom of [1, 1.1, 1.2, 1.5, 2]) { dispatchEvent(new Event('resize')); await tick(); geometry(); }
+    setPreferences({ enabled: true, offsetY: 2 }); await tick(); geometry(27);
+    document.documentElement.style.fontSize = '20px'; await tick(); geometry(27);
+    let header = document.querySelector('[data-testid="app-window-title-bar"]');
+    header.classList.remove('pl-[84px]'); await tick();
+    check(document.querySelector('[data-bb-ui-align]').textContent === '', 'full screen clears correction');
+    header.classList.add('pl-[84px]'); await tick(); geometry(27);
+    header.replaceWith(header.cloneNode(true)); await tick(); geometry(27);
+    setPreferences({ enabled: false, offsetY: 0 }); await tick();
+    check(document.querySelector('[data-bb-ui-align]').textContent === '', 'disable restores host styling');
+    setPreferences({ enabled: true, offsetY: 0 }); await tick(); geometry();
+    controller.abort(); dispose(); await tick();
+    check(!document.querySelector('[data-bb-ui-align]'), 'abort and repeated dispose remove styles');
+    const aborted = new AbortController(); aborted.abort(); mountAlignment(aborted.signal)();
+    check(!document.querySelector('[data-bb-ui-align]'), 'already aborted mount adds nothing');
+    const second = new AbortController(); const cleanup = mountAlignment(second.signal); await tick(); geometry();
+    cleanup(); check(!document.querySelector('[data-bb-ui-align]'), 'remount and cleanup');
+    if (originalOuterWidth) Object.defineProperty(window, 'outerWidth', originalOuterWidth);
+    document.querySelector('#result').textContent = `${results.length} checks passed\n${results.join('\n')}`;
+    return { passed: results.length };
+  };
+</script>
