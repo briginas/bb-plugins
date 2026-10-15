@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="330" viewBox="0 0 960 330" role="img" aria-labelledby="title desc">
 <title id="title">Oldtale dark and light palettes</title>
 <desc id="desc">Interface surface, text, accent, and terminal color samples in both modes.</desc>
-<rect x="0" width="480" height="330" fill="#1e1f22"/>
+<rect x="0" width="480" height="330" fill="#2b2d30"/>
 <text x="32" y="52" fill="#aaa7b0" font-family="system-ui,sans-serif" font-size="26" font-weight="600">Oldtale · Dark</text>
-<rect x="32" y="78" width="416" height="124" rx="10" fill="#26282d" stroke="#393b40"/>
+<rect x="32" y="78" width="416" height="124" rx="10" fill="#141415" stroke="#393b40"/>
 <text x="52" y="112" fill="#6a9bfa" font-family="system-ui,sans-serif" font-size="18">Interface and terminal palette</text>
-<text x="52" y="144" fill="#aaa7b0" font-family="system-ui,sans-serif" font-size="16">Primary text on a card surface</text>
+<text x="52" y="144" fill="#aaa7b0" font-family="system-ui,sans-serif" font-size="16">Dark workspace, graphite window chrome</text>
 <text x="52" y="177" fill="#9ea0a8" font-family="system-ui,sans-serif" font-size="15">Secondary text and metadata</text>
 <rect x="32" y="226" width="44" height="28" rx="4" fill="#1e1f22"/>
 <rect x="84" y="226" width="44" height="28" rx="4" fill="#bf7c76"/>

@@ -85,7 +85,9 @@
 
 .dark {
   color-scheme: dark;
-  --canvas: #1e1f22;
+  /* Graphite window chrome surrounds the darker workspace. */
+  --canvas: #2b2d30;
+  --background: #141415;
   --ink: #aaa7b0;
   --primary: #6a9bfa;
   --primary-foreground: #141415;
@@ -93,7 +95,7 @@
   --subtle-foreground: #92969f;
   --readback-foreground: #989ca5;
 
-  --card: #26282d;
+  --card: #1e1f22;
   --secondary: #2b2d30;
   --muted: #323438;
   --border: #393b40;
@@ -101,12 +103,13 @@
   --input: #4f5156;
   --surface-recessed: #141415;
   --surface-raised: #2b2d30;
-  --surface-scrim: #2b2d30eb;
+  --surface-scrim: var(--sidebar);
   --state-hover: #dfe1e50a;
   --state-active: #dfe1e515;
   --surface-selected: #2e436e;
   --surface-selected-border: #3574f0;
-  --sidebar: #2b2d30;
+  --sidebar: #1e1f22;
+  --sidebar-border: var(--sidebar);
   --sidebar-foreground: #dfe1e5;
   --sidebar-accent: #393b40;
   --sidebar-accent-foreground: #dfe1e5;
@@ -140,6 +143,14 @@
   --ansi-13: #e977a6;
   --ansi-14: #55b6c8;
   --ansi-15: #ffffff;
+}
+
+/* The shared edge belongs to the panel in web layouts and the inset on desktop. */
+.dark [data-sidebar="panel"] {
+  border-right-color: var(--sidebar);
+}
+.dark [data-sidebar="inset"] {
+  border-left-color: var(--sidebar);
 }
 
 /* Text on ANSI background fills, selected for contrast in each mode. */
