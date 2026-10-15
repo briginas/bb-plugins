@@ -46,8 +46,8 @@ const [pack] = JSON.parse(execFileSync(npm, ["pack", "--dry-run", "--ignore-scri
 }));
 const files = new Set(pack.files.map(({ path }) => path));
 for (const path of [
-  pkg.bb.server, pkg.bb.branding.icon, theme.css, theme.codeTheme.dark,
-  "dist/server.js", "dist/server.meta.json", "LICENSE", "THIRD_PARTY_NOTICES.md", "PLUGIN_OVERVIEW.md",
+  pkg.bb.server, pkg.bb.app, pkg.bb.branding.icon, theme.css, theme.codeTheme.dark,
+  "dist/server.js", "dist/server.meta.json", "dist/app.js", "LICENSE", "THIRD_PARTY_NOTICES.md", "PLUGIN_OVERVIEW.md",
 ]) {
   assert.ok(files.has(path.replace(/^\.\//, "")), `Package is missing ${path}`);
 }

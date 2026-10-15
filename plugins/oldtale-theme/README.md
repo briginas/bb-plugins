@@ -44,6 +44,42 @@ Installation adds the palette without changing the current selection.
 The plugin ID is `oldtale-theme`.
 The palette ID is `plugin:oldtale-theme:oldtale`.
 
+## Font settings
+
+Open **Plugins → Installed plugins → Oldtale Theme → Settings**.
+Choose font sizes by area: **code, left sidebar, messages, composer, and the rest of the interface**.
+Each area has its own size in **px** and line height in **em**.
+For example, a size of 16 px with a line height of 1.5 em gives a 24 px line.
+Changing one area does not change the other areas. Utility tiers such as XS and XL are not settings.
+
+Four more fields set the font families for the interface, code, serif text, and terminal.
+Enter one installed font family per field, for example `CodeNewRoman Nerd Font`, `Menlo`, or `Arial`.
+
+The defaults are 14 px for code and the sidebar, and 15 px for the other areas.
+Code sizes accept 8–18 px. Other areas accept 8–64 px.
+BB fixes file-viewer and diff rows at 18 px. The code size limit keeps those rows readable without breaking virtual scrolling or selection.
+The code line-height field applies to code in messages; file and diff row heights stay at 18 px.
+The separate File Editor (Monaco) plugin controls its own editor size; these settings cover code in messages and read-only source/diff viewers.
+Other line heights accept 0.5–4 em, including decimal values.
+
+The default family is **CodeNewRoman Nerd Font** for all four fields.
+If that font is unavailable on a client, the theme uses the monospace fallback.
+
+Settings apply immediately in every connected client while Oldtale is active.
+They persist across plugin reloads and do not affect other palettes or the window zoom.
+The terminal family follows its own field. BB controls the canvas terminal size separately.
+
+You can also use the CLI:
+
+```sh
+bb plugin config oldtale-theme set codeFontSize 16
+bb plugin config oldtale-theme set sidebarFontSize 16
+bb plugin config oldtale-theme set messageFontSize 18
+bb plugin config oldtale-theme set messageLineHeight 1.6
+bb plugin config oldtale-theme set uiFont 'CodeNewRoman Nerd Font'
+bb plugin config oldtale-theme set codeFont 'Menlo'
+```
+
 ## Update
 
 ```sh

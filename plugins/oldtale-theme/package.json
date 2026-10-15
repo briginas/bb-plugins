@@ -12,18 +12,38 @@
     "directory": "plugins/oldtale-theme"
   },
   "homepage": "https://github.com/briginas/bb-plugins/tree/main/plugins/oldtale-theme#readme",
-  "bugs": { "url": "https://github.com/briginas/bb-plugins/issues" },
-  "keywords": ["bb", "bb-plugin", "bb-theme", "theme", "oldtale"],
-  "files": [
-    "assets/icon.svg", "dist", "src", "themes", "PLUGIN_OVERVIEW.md",
-    "THIRD_PARTY_NOTICES.md", "UPSTREAM.md", "upstream/oldtale-dark.json"
+  "bugs": {
+    "url": "https://github.com/briginas/bb-plugins/issues"
+  },
+  "keywords": [
+    "bb",
+    "bb-plugin",
+    "bb-theme",
+    "theme",
+    "oldtale"
   ],
-  "engines": { "bb": ">=0.46.0", "bbPluginSdk": "^0.6.37" },
+  "files": [
+    "assets/icon.svg",
+    "dist",
+    "src",
+    "themes",
+    "PLUGIN_OVERVIEW.md",
+    "THIRD_PARTY_NOTICES.md",
+    "UPSTREAM.md",
+    "upstream/oldtale-dark.json"
+  ],
+  "engines": {
+    "bb": ">=0.46.0",
+    "bbPluginSdk": "^0.6.37"
+  },
   "bb": {
     "name": "Oldtale Theme",
     "description": "Oldtale colors for the BB interface, terminal, and code, with dark and light modes.",
-    "branding": { "icon": "./assets/icon.svg" },
+    "branding": {
+      "icon": "./assets/icon.svg"
+    },
     "server": "./src/server.ts",
+    "app": "./src/app.ts",
     "skills": [],
     "themes": [
       {
@@ -31,7 +51,10 @@
         "name": "Oldtale",
         "description": "Graphite surfaces and the Oldtale syntax palette, with a companion light mode.",
         "css": "./themes/oldtale.css",
-        "codeTheme": { "dark": "./themes/pierre-dark.json", "light": "github-light" }
+        "codeTheme": {
+          "dark": "./themes/pierre-dark.json",
+          "light": "github-light"
+        }
       }
     ]
   },
@@ -39,12 +62,22 @@
     "typecheck": "tsc --noEmit",
     "build": "bb plugin build",
     "verify": "node scripts/verify.mjs",
-    "check": "npm run typecheck && npm run build && npm run verify"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test && npm run build && npm run verify"
   },
   "devDependencies": {
     "@get-bb/plugin-sdk": "0.6.37",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^22.0.0",
+    "@types/react": "^19.3.0",
     "bb-app": "0.46.0",
+    "cron-parser": "^5.10.2",
+    "jsdom": "^30.1.3",
+    "react": "^19.3.1",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
   }
 }
