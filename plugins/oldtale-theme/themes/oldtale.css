@@ -145,6 +145,11 @@
   --ansi-15: #ffffff;
 }
 
+/* Keep thread titles softer than the sidebar controls in dark mode. */
+.dark [data-sidebar="sidebar"] .bb-thread-title {
+  color: #bcbec3;
+}
+
 /* The shared edge belongs to the panel in web layouts and the inset on desktop. */
 .dark [data-sidebar="panel"] {
   border-right-color: var(--sidebar);
