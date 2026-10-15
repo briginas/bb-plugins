@@ -5,6 +5,7 @@
  */
 :root,
 .light {
+  --oldtale-dusty-rose: #c56584;
   --font-sans: var(--oldtale-font-sans, "CodeNewRoman Nerd Font"), monospace;
   --font-mono: var(--oldtale-font-mono, "CodeNewRoman Nerd Font"), monospace;
   --font-serif: var(--oldtale-font-serif, "CodeNewRoman Nerd Font"), monospace;
@@ -143,6 +144,29 @@
   --ansi-13: #e977a6;
   --ansi-14: #55b6c8;
   --ansi-15: #ffffff;
+}
+
+/* Accent send actions without recoloring stop controls or shared primary tokens. */
+[data-promptbox-send-menu]:has(> [data-promptbox-submit-action][type="submit"]),
+[data-promptbox-submit-action][type="submit"] {
+  background-color: var(--oldtale-dusty-rose);
+  color: #141415;
+}
+[data-promptbox-send-menu]:hover:has(> [data-promptbox-submit-action][type="submit"]:not(:disabled)),
+[data-promptbox-submit-action][type="submit"]:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--oldtale-dusty-rose) 90%, #141415);
+}
+
+/* Native panel tabs use pressed buttons inside a shared tab pill. */
+[data-sidebar-split-tab-group] [class~="group/tab-pill"]:has(> button[aria-pressed="true"])::after {
+  content: "";
+  position: absolute;
+  inset-inline: 6px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 1px;
+  background-color: var(--oldtale-dusty-rose);
+  pointer-events: none;
 }
 
 /* Keep thread titles softer than the sidebar controls in dark mode. */

@@ -14,6 +14,7 @@ The syntax rules, semantic colors, editor colors, and diff colors retain their o
 `themes/oldtale.css` maps the palette to BB design tokens.
 The dark terminal palette retains all 16 original ANSI colors.
 The interface uses graphite surfaces and brighter blue accents for links and controls.
+Send buttons and the active panel tab underline use the original Dusty Rose (`#c56584`) property color.
 Secondary text colors provide contrast on these surfaces.
 The light interface and terminal palettes are companion adaptations.
 Light code colors use the bundled `github-light` theme.

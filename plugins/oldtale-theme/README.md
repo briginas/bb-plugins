@@ -8,6 +8,7 @@ This plugin adapts [WebStorm OldTale Dark](https://github.com/briginas/webstorm-
 The preview shows palette samples, not an application screenshot.
 Dark mode uses graphite surfaces and the original Oldtale terminal and code colors.
 Light mode uses a companion interface and terminal palette with `github-light` code colors.
+Both modes use Dusty Rose (`#c56584`) for send buttons and a thin underline on the active panel tab.
 
 ## Install
 
