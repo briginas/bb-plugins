@@ -8,7 +8,7 @@ The collection manifest at [`.bb/plugins.json`](.bb/plugins.json) lists the plug
 
 - [Provider remaining](plugins/provider-remaining/README.md) (`provider-remaining`): shows the remaining provider quota in the sidebar and plugin settings.
 - [Oldtale Theme](plugins/oldtale-theme/README.md) (`oldtale-theme`): adds Oldtale colors for the interface, terminal, and code in dark and light modes.
-- [UI Align](plugins/ui-align/README.md) (`ui-align`): aligns the BB header controls with macOS window buttons when the interface is zoomed.
+- [UI Align](plugins/ui-align/README.md) (`ui-align`): aligns the BB header controls with macOS window buttons when zoomed, with an optional compact thread header in the window title bar.
 
 ## Install
 

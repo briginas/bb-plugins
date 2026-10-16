@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>UI Align — compact header fixture</title>
+<style>
+  :root { font-size: 16px; --bb-app-chrome-row-height: 48px; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #141415; color: #bcbec3; font: 15px/1.5 system-ui; }
+  button, input { font: inherit; color: inherit; }
+  button { border: 1px solid #393b40; border-radius: 5px; background: #2b2d30; height: 28px; padding: 0 8px; white-space: nowrap; cursor: pointer; }
+  button:hover { background: #393b40; }
+  [data-testid="app-window-title-bar"] { position: fixed; z-index: 44; top: 0; left: 0; right: 0; height: var(--bb-app-chrome-row-height); display: flex; gap: 4px; align-items: center; padding: 0 12px 0 84px; background: #2b2d30; -webkit-app-region: drag; }
+  .traffic-lights { position: fixed; z-index: 46; left: 14px; top: 18px; display: flex; gap: 8px; pointer-events: none; }
+  .traffic-lights i { display: block; width: 14px; height: 14px; border-radius: 50%; background: #ff6059; }
+  .traffic-lights i:nth-child(2) { background: #ffbd2e; }
+  .traffic-lights i:nth-child(3) { background: #28c840; }
+  .chrome-group { display: flex; gap: 4px; align-items: center; -webkit-app-region: no-drag; }
+  [class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"] { --bb-macos-chrome-control-y: 2px; transform: translateY(var(--bb-macos-chrome-control-y)); }
+  #right-controls { margin-left: auto; }
+  .layout { display: flex; height: 100vh; padding-top: 48px; }
+  aside { flex: 0 0 240px; background: #1e1f22; padding: 24px 16px; border-right: 1px solid #2b2d30; }
+  aside p { padding: 8px; border-radius: 5px; }
+  aside p.selected { background: #393b40; }
+  main { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+  #thread-root { display: flex; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; }
+  header { position: relative; flex-shrink: 0; height: var(--bb-app-chrome-row-height); padding: 0 16px; border-bottom: 1px solid #2b2d30; background: #1e1f22; container-type: inline-size; }
+  [data-testid="app-page-header-content-row"] { display: flex; align-items: center; height: var(--bb-app-chrome-row-height); gap: 8px; position: relative; z-index: 10; }
+  .center { display: flex; flex: 1; min-width: 0; align-items: center; }
+  .center-content { display: flex; min-width: 0; max-width: 100%; align-items: center; gap: 8px; pointer-events: auto; }
+  .title-wrapper { min-width: 0; }
+  #thread-title { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; }
+  .actions, [data-thread-header-pane-actions], [data-thread-header-workflow-actions] { display: flex; flex-shrink: 0; align-items: center; gap: 4px; }
+  .actions { pointer-events: auto; }
+  [data-thread-window] { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 24px 32px; }
+  .messages { flex: 1; max-width: 760px; width: 100%; margin: 0 auto; }
+  .bubble { margin-top: 32px; padding: 16px 20px; border-radius: 12px; background: #2b2d30; }
+  .composer { max-width: 760px; width: 100%; margin: 24px auto 0; border: 1px solid #393b40; background: #1e1f22; border-radius: 12px; padding: 16px; }
+  .muted { color: #92969f; font-size: 13px; }
+  #status { color: #d68abc; }
+  #demo-controls { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+  #menu { position: fixed; z-index: 50; top: 48px; right: 60px; background: #2b2d30; border: 1px solid #393b40; border-radius: 6px; padding: 12px; }
+</style>
+<div class="traffic-lights"><i></i><i></i><i></i></div>
+<div data-testid="app-window-title-bar" class="pl-[84px]">
+  <div class="chrome-group [transform:translateY(var(--bb-macos-chrome-control-y))]"><button aria-label="Go back">←</button><button aria-label="Go forward">→</button></div>
+  <div class="chrome-group"><button aria-label="Toggle sidebar" class="[transform:translateY(var(--bb-macos-chrome-control-y))]">☰</button></div>
+  <div id="right-controls" class="chrome-group [transform:translateY(var(--bb-macos-chrome-control-y))]"><button aria-label="Show right panel">▥</button></div>
+</div>
+<div class="layout">
+  <aside><strong>bb-plugins</strong><p class="selected">Move chat header…</p><p>Oldtale typography</p><p class="muted">UI Align · тестовый стенд</p></aside>
+  <main><div id="thread-root" data-split-pane-id="main" data-conversation-collapsed="false">
+    <header><div data-testid="app-page-header-content-row" class="[transform:translateY(var(--bb-macos-chrome-control-y))]">
+      <div class="center"><div class="center-content"><div class="title-wrapper"><p id="thread-title">Move chat header components</p></div><button id="thread-menu" aria-label="Thread menu">⋯</button></div></div>
+      <div class="actions"><div data-thread-header-workflow-actions><button id="plugin-action" aria-label="Plugin action">◷</button><button id="workspace">Workspace</button><button id="commit">Commit</button></div><div data-thread-header-pane-actions><button id="pane-action" aria-label="Pane action">▣</button></div></div>
+    </div></header>
+    <div data-thread-window><div class="messages"><div class="muted">Отдельный стенд · разметка шапки BB 0.46</div><div class="bubble">Перенести заголовок беседы и все действия в свободное место верхней панели.</div><p>Прежняя строка заголовка освобождает место для переписки. Нативные элементы сохраняют родителей и обработчики.</p><p id="status"></p><div id="demo-controls"><button id="toggle">Обычная шапка</button><span class="muted">Двойной щелчок по заголовку — переименование</span></div><pre id="results" class="muted"></pre></div><div class="composer"><span class="muted">Напишите сообщение…</span><div style="margin-top:24px">＋ <span class="muted">Codex · gpt-6</span></div></div></div>
+  </div></main>
+</div>
+<script type="module">
+  import { mountAlignment, setPreferences } from './assets/alignment.js';
+  import { mountCompactHeader, setCompactHeaderEnabled, subscribeCompactHeaderStatus } from './assets/compact-header.js';
+  const tick = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  let status;
+  subscribeCompactHeaderStatus(value => { status = value; document.querySelector('#status').textContent = `Компактная шапка: ${value.reason} · свободно ${value.availableWidth}px`; });
+  const controller = new AbortController();
+  const alignmentController = new AbortController();
+  const disposeAlignment = mountAlignment(alignmentController.signal);
+  let dispose = mountCompactHeader(controller.signal);
+  setCompactHeaderEnabled(true);
+  let clicks = 0;
+  const title = document.querySelector('#thread-title');
+  title.addEventListener('dblclick', () => {
+    const input = document.createElement('input'); input.value = title.textContent; title.replaceWith(input); input.focus();
+    input.addEventListener('keydown', event => { if (event.key === 'Enter') { title.textContent = input.value; input.replaceWith(title); } });
+  });
+  document.querySelector('#thread-menu').addEventListener('click', () => {
+    const existing = document.querySelector('#menu'); if (existing) return existing.remove();
+    const menu = document.createElement('div'); menu.id = 'menu'; menu.textContent = 'Rename · Pin · Archive'; document.body.append(menu);
+  });
+  document.querySelector('#plugin-action').addEventListener('click', () => clicks++);
+  document.querySelector('#toggle').addEventListener('click', () => {
+    setCompactHeaderEnabled(!status.enabled); document.querySelector('#toggle').textContent = status.enabled ? 'Компактная шапка' : 'Обычная шапка';
+  });
+  const tests = [];
+  function check(condition, name) { tests.push({ name, status: condition ? 'passed' : 'failed' }); if (!condition) throw Error(name); }
+  const closeTo = (a, b) => Math.abs(a - b) < 0.1;
+  const active = () => document.querySelector('[data-bb-ui-align-compact-header]');
+  window.fixture = { tick, getStatus: () => status, setCompactHeaderEnabled };
+  window.runChecks = async () => {
+    try {
+      await tick();
+      const header = document.querySelector('header'), row = header.firstElementChild;
+      const originalParent = header.parentNode, originalNext = header.nextSibling;
+      const pluginButton = document.querySelector('#plugin-action'), titleParent = title.parentNode;
+      const conversation = document.querySelector('[data-thread-window]');
+      const compactTop = conversation.getBoundingClientRect().top;
+      check(status.active && active() === header, 'single-pane conversation header occupies the title-bar gap');
+      const duplicatePane = document.createElement('div'); duplicatePane.dataset.splitPaneId = 'main'; duplicatePane.style.cssText = 'position:fixed;left:0;bottom:0;width:100px;height:100px';
+      document.body.append(duplicatePane); await tick(); check(status.active, 'duplicate wrappers for the same pane do not count as a split'); duplicatePane.remove(); await tick();
+      check(closeTo(header.getBoundingClientRect().top, 0), 'fixed header reaches the window top');
+      check(closeTo(header.getBoundingClientRect().height, 48), 'header matches title-bar height');
+      check(closeTo(compactTop, 48), 'old header row releases its full 48px');
+      const headerRect = header.getBoundingClientRect();
+      check(document.elementFromPoint(headerRect.x + 20, headerRect.y + 1)?.closest('[data-testid="app-window-title-bar"]'), 'unused chrome passes pointer hits through to the native drag region');
+      check(header.parentNode === originalParent && header.nextSibling === originalNext && title.parentNode === titleParent, 'native DOM ancestry and title identity are preserved');
+      for (const button of header.querySelectorAll('button')) {
+        const rect = button.getBoundingClientRect(), hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        check(button === hit || button.contains(hit), `${button.id} remains visible and clickable above window chrome`);
+        check(closeTo(rect.y + rect.height / 2, 25), `${button.id} aligns with macOS controls`);
+      }
+      pluginButton.click(); check(clicks === 1, 'existing plugin-action handler survives');
+      document.querySelector('#thread-menu').click(); check(!!document.querySelector('#menu'), 'thread menu still opens'); document.querySelector('#menu').remove();
+      title.dispatchEvent(new MouseEvent('dblclick')); await tick();
+      const input = titleParent.querySelector('input'); check(!!input && document.activeElement === input, 'rename input mounts and retains focus');
+      input.value = 'Renamed thread'; input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })); await tick();
+      check(title.textContent === 'Renamed thread' && status.active, 'rename completes while header stays compact');
+      setPreferences({ enabled: true, offsetY: 2 }); await tick();
+      check(closeTo(pluginButton.getBoundingClientRect().y + 14, 27), 'alignment offset propagates into compact header');
+      setPreferences({ enabled: true, offsetY: 0 }); await tick();
+      const outer = Object.getOwnPropertyDescriptor(window, 'outerWidth');
+      for (const zoom of [1.1, 1.25, 1.5, 2]) {
+        Object.defineProperty(window, 'outerWidth', { configurable: true, get: () => innerWidth * zoom });
+        dispatchEvent(new Event('resize')); await tick();
+        const rect = pluginButton.getBoundingClientRect();
+        check(closeTo((rect.y + rect.height / 2) * zoom, 25), `compact actions follow modeled zoom ${zoom}`);
+      }
+      if (outer) Object.defineProperty(window, 'outerWidth', outer); else delete window.outerWidth;
+      dispatchEvent(new Event('resize')); await tick();
+      const chrome = document.querySelector('[data-testid="app-window-title-bar"]');
+      chrome.classList.remove('pl-[84px]'); await tick();
+      check(status.active && closeTo(pluginButton.getBoundingClientRect().y + 14, 26), 'full-screen chrome uses the native control offset');
+      chrome.classList.add('pl-[84px]'); await tick();
+      setCompactHeaderEnabled(false); await tick();
+      check(!active() && closeTo(conversation.getBoundingClientRect().top - compactTop, 48), 'disable restores native row and conversation height');
+      setCompactHeaderEnabled(true); await tick();
+      const pane = document.createElement('div'); pane.dataset.splitPaneId = 'other'; pane.style.cssText = 'position:fixed;left:0;bottom:0;width:100px;height:100px'; document.body.append(pane); await tick();
+      check(status.reason === 'split-layout' && !active(), 'split layout restores native headers'); pane.remove(); await tick(); check(status.active, 'leaving split layout reapplies compact mode');
+      pane.style.display = 'none'; document.body.append(pane); await tick(); check(status.active, 'hidden second pane does not block compact mode');
+      pane.style.display = ''; await tick(); check(status.reason === 'split-layout' && !active(), 'revealing a second pane restores native headers');
+      pane.style.display = 'none'; await tick(); check(status.active, 'hiding a second pane reapplies compact mode'); pane.remove(); await tick();
+      const bar = document.querySelector('[data-testid="app-window-title-bar"]');
+      bar.hidden = true; bar.style.display = 'none'; await tick(); check(status.reason === 'no-title-bar' && !active(), 'hidden title bar restores native header');
+      bar.hidden = false; bar.style.display = ''; await tick();
+      bar.remove(); await tick(); check(status.reason === 'no-title-bar', 'missing title bar restores native header'); document.body.prepend(bar); await tick();
+      const competitor = document.createElement('div'); competitor.id = 'pins'; competitor.style.cssText = 'width:85vw;height:28px;flex-shrink:0'; bar.insertBefore(competitor, bar.lastElementChild); await tick();
+      check(status.reason === 'not-enough-space' && !active(), 'another title-bar plugin cannot be overlapped'); competitor.remove(); await tick();
+      const wideAction = document.createElement('button'); wideAction.textContent = 'An oversized workflow action'; wideAction.style.minWidth = '1400px'; document.querySelector('[data-thread-header-workflow-actions]').append(wideAction); await tick();
+      check(status.reason === 'not-enough-space' && !active(), 'dynamic action overflow restores the full native row'); wideAction.remove(); await tick(); check(status.active, 'removing extra action restores compact mode');
+      const root = document.querySelector('#thread-root'); root.style.transform = 'translateX(0)'; await tick(); check(status.reason === 'unsupported-layout' && !active(), 'transformed ancestor is detected'); root.style.transform = ''; await tick();
+      const unrelated = document.createElement('header'); unrelated.innerHTML = '<div data-testid="app-page-header-content-row">Settings</div>'; document.body.append(unrelated); await tick(); check(!unrelated.hasAttribute('data-bb-ui-align-compact-header'), 'unrelated page headers stay unchanged'); unrelated.remove();
+      const replacement = header.cloneNode(true); replacement.removeAttribute('data-bb-ui-align-compact-header'); header.replaceWith(replacement); await tick();
+      check(active() === replacement && !header.hasAttribute('data-bb-ui-align-compact-header'), 'React-style structural replacement clears old ownership');
+      replacement.replaceWith(header); await tick();
+      for (let i = 0; i < 6; i++) { setCompactHeaderEnabled(false); await tick(); setCompactHeaderEnabled(true); await tick(); }
+      check(status.active && header.parentNode === originalParent && document.querySelectorAll('[data-bb-ui-align-compact-header-style]').length === 1, 'repeated toggles preserve nodes and a single stylesheet');
+      controller.abort(); dispose(); await tick();
+      check(!active() && !document.querySelector('[data-bb-ui-align-compact-header-style]'), 'abort and repeated disposal remove all owned DOM and CSS');
+      const aborted = new AbortController(); aborted.abort(); mountCompactHeader(aborted.signal)();
+      check(!document.querySelector('[data-bb-ui-align-compact-header-style]'), 'already-aborted mount adds nothing');
+      const second = new AbortController(); dispose = mountCompactHeader(second.signal); await tick(); check(status.active, 'remount reapplies the mode');
+      dispose(); await tick();
+      check(!active() && closeTo(conversation.getBoundingClientRect().top, 96), 'direct disposal restores original geometry');
+      // Leave the review fixture in compact mode.
+      dispose = mountCompactHeader(new AbortController().signal); await tick();
+      document.querySelector('#results').textContent = `${tests.length} checks passed`;
+    } catch (error) { document.querySelector('#results').textContent = error.stack; }
+    return { tests };
+  };
+</script>
+</html>

@@ -8,7 +8,7 @@
   },
   "bb": {
     "name": "UI Align",
-    "description": "Выравнивает верхнюю панель BB с кнопками окна macOS при увеличенном масштабе.",
+    "description": "Выравнивает кнопки верхней панели BB и переносит в неё заголовок беседы в компактном режиме.",
     "branding": {
       "icon": "Settings"
     },
@@ -32,6 +32,6 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "bb plugin build",
-    "build:fixture": "tsc alignment.ts --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM --skipLibCheck --outDir tests/assets"
+    "build:fixture": "tsc alignment.ts compact-header.ts --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM --skipLibCheck --outDir tests/assets"
   }
 }
