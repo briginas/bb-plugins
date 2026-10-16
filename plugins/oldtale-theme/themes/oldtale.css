@@ -169,6 +169,11 @@
   pointer-events: none;
 }
 
+/* Match unread thread dots to the send action in both modes. */
+[data-sidebar="sidebar"] span[aria-label="Unread thread succeeded"] {
+  background-color: var(--oldtale-dusty-rose);
+}
+
 /* Keep thread titles softer than the sidebar controls in dark mode. */
 .dark [data-sidebar="sidebar"] .bb-thread-title {
   color: #bcbec3;
