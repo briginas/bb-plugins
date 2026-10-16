@@ -16,6 +16,7 @@
   .traffic-lights i:nth-child(3) { background: #28c840; }
   .chrome-group { display: flex; gap: 4px; align-items: center; -webkit-app-region: no-drag; }
   [class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"] { --bb-macos-chrome-control-y: 2px; transform: translateY(var(--bb-macos-chrome-control-y)); }
+  [class~="[transform:translateY(var(--bb-macos-chrome-control-y,2px))]"] { transform: translateY(var(--bb-macos-chrome-control-y,2px)); }
   #right-controls { margin-left: auto; }
   .layout { display: flex; height: 100vh; padding-top: 48px; }
   aside { flex: 0 0 240px; background: #1e1f22; padding: 24px 16px; border-right: 1px solid #2b2d30; }
@@ -116,6 +117,21 @@
       check(title.textContent === 'Renamed thread' && status.active, 'rename completes while header stays compact');
       setPreferences({ enabled: true, offsetY: 2 }); await tick();
       check(closeTo(pluginButton.getBoundingClientRect().y + 14, 27), 'alignment offset propagates into compact header');
+      setPreferences({ enabled: true, offsetY: 0 }); await tick();
+      const currentChrome = document.querySelector('[data-testid="app-window-title-bar"]');
+      const legacyTransform = '[transform:translateY(var(--bb-macos-chrome-control-y))]';
+      const currentTransform = '[transform:translateY(var(--bb-macos-chrome-control-y,2px))]';
+      const sidebar = currentChrome.querySelector('[aria-label="Toggle sidebar"]');
+      sidebar.classList.remove(legacyTransform);
+      currentChrome.firstElementChild.append(sidebar.parentElement);
+      for (const owner of currentChrome.querySelectorAll('[class]')) {
+        if (owner.classList.contains(legacyTransform)) owner.classList.replace(legacyTransform, currentTransform);
+      }
+      currentChrome.style.setProperty('--bb-macos-chrome-control-y', 'calc(26px - var(--bb-app-chrome-row-height) / 2)');
+      await tick();
+      check(closeTo(pluginButton.getBoundingClientRect().y + 14, 25), 'current shared control group aligns compact actions');
+      setPreferences({ enabled: false, offsetY: 0 }); await tick();
+      check(status.active && closeTo(pluginButton.getBoundingClientRect().y + 14, 26), 'compact actions follow inherited calc offset with alignment disabled');
       setPreferences({ enabled: true, offsetY: 0 }); await tick();
       const outer = Object.getOwnPropertyDescriptor(window, 'outerWidth');
       for (const zoom of [1.1, 1.25, 1.5, 2]) {

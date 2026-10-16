@@ -34,9 +34,9 @@ const NATIVE_CENTER_Y = 25;
 // This class reserves room for macOS traffic lights. BB removes it in full
 // screen and never adds it to a browser, Windows or Linux title bar.
 const NATIVE_RESERVATION = 'pl-[84px]';
-// Host transforms can live on a group (history/right panel) or on the
-// nested button itself (sidebar). Target the transform owners in both cases.
-const TRANSFORM_OWNER = '[class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"]';
+// BB can transform a shared group or individual controls. Match the variable
+// reference, including newer classes with a var() fallback such as `,2px`.
+const TRANSFORM_OWNER = '[class*="[transform:translateY(var(--bb-macos-chrome-control-y"]';
 
 export function mountAlignment(signal: AbortSignal): () => void {
   if (signal.aborted) return () => {};
@@ -67,7 +67,8 @@ export function mountAlignment(signal: AbortSignal): () => void {
         const rect = header.getBoundingClientRect();
         if (rect.height > 0) {
           const y = (NATIVE_CENTER_Y + preferences.offsetY) / zoom - rect.top - rect.height / 2;
-          css = `${HEADER}.pl-\\[84px\\] ${TRANSFORM_OWNER} { --bb-macos-chrome-control-y: ${y.toFixed(4)}px !important; }`;
+          const scope = `${HEADER}.pl-\\[84px\\]`;
+          css = `${scope}, ${scope} ${TRANSFORM_OWNER} { --bb-macos-chrome-control-y: ${y.toFixed(4)}px !important; }`;
         }
       }
     }
@@ -95,13 +96,13 @@ export function mountAlignment(signal: AbortSignal): () => void {
     // React can replace the header across shell/layout changes. Ignore chat
     // streaming and unrelated DOM changes rather than polling navigation.
     if (records.some(record =>
-      record.target === header ||
+      (record.target instanceof Element && (record.target === header || header?.contains(record.target))) ||
       [...Array.from(record.addedNodes), ...Array.from(record.removedNodes)].some(node =>
         node instanceof Element && (node.matches(HEADER) || node.querySelector(HEADER)),
       ),
     )) schedule();
   });
-  mutation.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  mutation.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
   window.addEventListener('resize', schedule);
   window.visualViewport?.addEventListener('resize', schedule);
   listeners.add(schedule);

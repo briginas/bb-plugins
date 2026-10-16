@@ -6,6 +6,8 @@
   body { margin: 0; font: 16px system-ui; }
   [data-testid="app-window-title-bar"] { position: fixed; top: 0; width: 100%; height: 3rem; display: flex; align-items: center; gap: 4px; padding-left: 84px; box-sizing: border-box; }
   [class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"] { --bb-macos-chrome-control-y: 2px; transform: translateY(var(--bb-macos-chrome-control-y)); }
+  [class~="[transform:translateY(var(--bb-macos-chrome-control-y,2px))]"] { transform: translateY(var(--bb-macos-chrome-control-y,2px)); }
+  .current-title-bar { height: 40px; --bb-macos-chrome-control-y: calc(26px - 40px / 2); }
   .control-group { display: flex; align-items: center; }
   button { width: 28px; height: 28px; }
   #result { margin: 90px 24px; white-space: pre-wrap; }
@@ -35,6 +37,25 @@
   }
   window.runChecks = async () => {
     for (zoom of [1, 1.1, 1.2, 1.5, 2]) { dispatchEvent(new Event('resize')); await tick(); geometry(); }
+    // BB 0.46.1: history and sidebar share one transform owner; the variable
+    // is inherited from the title bar and the transform class has a fallback.
+    let current = document.querySelector('[data-testid="app-window-title-bar"]');
+    const currentClass = '[transform:translateY(var(--bb-macos-chrome-control-y,2px))]';
+    const legacy = '[transform:translateY(var(--bb-macos-chrome-control-y))]';
+    const history = current.firstElementChild;
+    const sidebar = current.querySelector('[data-sidebar="trigger"]');
+    sidebar.classList.remove(legacy);
+    history.append(sidebar.parentElement);
+    for (const owner of current.querySelectorAll('[class]')) {
+      if (owner.classList.contains(legacy)) owner.classList.replace(legacy, currentClass);
+    }
+    current.classList.add('current-title-bar'); await tick();
+    for (zoom of [1, 1.1, 1.2, 1.5, 2]) { dispatchEvent(new Event('resize')); await tick(); geometry(); }
+    // A descendant replacement must be detected even if the bar does not resize.
+    history.replaceWith(history.cloneNode(true)); await tick(); geometry();
+    setPreferences({ enabled: false, offsetY: 0 }); await tick();
+    geometry(26 * zoom);
+    setPreferences({ enabled: true, offsetY: 0 }); await tick(); geometry();
     setPreferences({ enabled: true, offsetY: 2 }); await tick(); geometry(27);
     document.documentElement.style.fontSize = '20px'; await tick(); geometry(27);
     let header = document.querySelector('[data-testid="app-window-title-bar"]');

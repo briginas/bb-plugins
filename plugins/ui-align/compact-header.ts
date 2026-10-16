@@ -136,8 +136,11 @@ export function mountCompactHeader(signal: AbortSignal): () => void {
     if (gap.width < required || barRect.height < 28) return fallback('not-enough-space', gap.width);
 
     if (activeHeader !== header) { clear(); activeHeader = header; header.setAttribute(MARKER, ''); }
-    const transformOwner = bar.querySelector<HTMLElement>('[class~="[transform:translateY(var(--bb-macos-chrome-control-y))]"]');
-    const offset = transformOwner ? parseFloat(getComputedStyle(transformOwner).getPropertyValue('--bb-macos-chrome-control-y')) || 0 : 0;
+    // Measure the actual control position: BB may shift a shared group, and
+    // its inherited custom property can contain calc(), which parseFloat loses.
+    const control = bar.querySelector('button')?.getBoundingClientRect();
+    const offset = control && control.height > 0
+      ? control.top + control.height / 2 - barRect.top - barRect.height / 2 : 0;
     const z = (parseInt(barCss.zIndex, 10) || 44) + 1;
     const selector = `[${MARKER}]`;
     // Keep the existing React nodes and their ancestry: menus, rename, SDK slots
