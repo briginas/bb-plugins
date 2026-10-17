@@ -187,6 +187,111 @@
   border-left-color: var(--sidebar);
 }
 
+/* Optional sidebar cards. BB continues to own selection, links and row actions.
+   Only rows with the current host markup and SDK data are decorated. */
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row] {
+  --oldtale-card-line: var(--oldtale-line-sidebar, 1.5em);
+  --oldtale-card-time-width: 4ch;
+  font-size: var(--oldtale-size-sidebar, 14px);
+  height: auto;
+  min-height: calc(var(--oldtale-card-line) * 2 + 12px);
+  align-items: stretch;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row] > .bb-sidebar-hover-actions-inset {
+  position: static;
+  padding-right: 0;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-content] {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  min-width: 0;
+  padding-block: 6px;
+  padding-inline-start: 12px;
+  padding-inline-end: calc(var(--oldtale-card-time-width) + 30px);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-content] .bb-thread-title {
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  line-height: var(--oldtale-card-line);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-branch] {
+  display: flex !important; /* Override the inline fallback for other palettes. */
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  height: var(--oldtale-card-line);
+  color: var(--muted-foreground);
+  font-size: var(--oldtale-size-sidebar, 14px);
+  line-height: var(--oldtale-card-line);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-branch] > svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-branch]:not(:has(> span:not(:empty))) > svg {
+  visibility: hidden;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-branch] > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-content] [data-sidebar-thread-provider] {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  margin: 0;
+  height: var(--oldtale-card-line);
+  color: var(--muted-foreground);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row] > [data-sidebar-thread-trailing] {
+  position: absolute;
+  right: 0;
+  top: 4px;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row] [data-sidebar-thread-trailing-indicator] {
+  position: relative;
+  left: calc(-1 * (var(--oldtale-card-time-width) + 4px));
+  color: var(--primary);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row] [aria-label="Thread working"] {
+  color: var(--primary);
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-time] {
+  display: block !important;
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  width: var(--oldtale-card-time-width);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: right;
+  font-size: var(--oldtale-size-sidebar, 14px);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--oldtale-card-line);
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row]:has([aria-label="Thread working"]) [data-oldtale-sidebar-time] {
+  color: var(--primary);
+}
+/* Leave the host's hover/focus/menu controls clear, including touch drag chips. */
+@media (hover: hover) {
+  :root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row]:is(:hover, :focus-within) [data-oldtale-sidebar-time] {
+    visibility: hidden;
+  }
+}
+:root[data-oldtale-sidebar-cards="true"] [data-oldtale-sidebar-row]:is(:has([data-state="open"]), [data-sidebar-touch-armed="true"]) [data-oldtale-sidebar-time] {
+  visibility: hidden;
+}
+
 /* Text on ANSI background fills, selected for contrast in each mode. */
 :root,
 .light {

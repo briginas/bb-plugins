@@ -1,8 +1,24 @@
-import { useEffect } from "react";
-import { definePluginApp, useSettings } from "@get-bb/plugin-sdk/app";
+import { useEffect, useRef } from "react";
+import { definePluginApp, experimental_useSidebarThreads, useSettings } from "@get-bb/plugin-sdk/app";
 import { applyTypography } from "./typography";
 import { applyChatPreferences, chatPreferences, mountLoaderPhaseSync } from "./chat";
 import { registerCoinsWorklet } from "./coins-worklet";
+import { mountSidebarCards, sidebarCardsEnabled } from "./sidebar";
+
+function SidebarSync() {
+  const { values, isLoading } = useSettings();
+  const { threads } = experimental_useSidebarThreads();
+  const enabled = !isLoading && sidebarCardsEnabled(values ?? {});
+  const cards = useRef<ReturnType<typeof mountSidebarCards> | null>(null);
+  useEffect(() => {
+    if (!enabled) return;
+    const mounted = mountSidebarCards(document);
+    cards.current = mounted;
+    return () => { mounted.dispose(); cards.current = null; };
+  }, [enabled]);
+  useEffect(() => { cards.current?.update(threads); }, [enabled, threads]);
+  return null;
+}
 
 function TypographySync() {
   const { values, isLoading } = useSettings();
@@ -38,4 +54,5 @@ function ChatSync() {
 export default definePluginApp((app) => {
   app.slots.experimental_appOverlay({ id: "typography-sync", component: TypographySync });
   app.slots.experimental_appOverlay({ id: "chat-sync", component: ChatSync });
+  app.slots.experimental_appOverlay({ id: "sidebar-sync", component: SidebarSync });
 });

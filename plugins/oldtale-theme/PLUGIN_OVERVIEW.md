@@ -42,6 +42,16 @@ Coins fall back to the grid if the browser cannot run the local paint worklet.
 Loaders respect reduced-motion preferences and use Oldtale colors.
 Beautiful Chat is not required.
 
+## Sidebar cards
+
+The **Карточки чатов в левой панели** setting is enabled by default.
+It places the branch below the title, the update age beside the native status,
+and the provider icon at the lower right.
+The layout uses the sidebar font settings and follows both Oldtale modes.
+Turn it off to restore BB's native rows immediately.
+Threads without a branch keep an empty second line.
+Navigation and row actions remain available.
+
 ## Requirements
 
 BB 0.46.0 or later, Plugin SDK 0.6.37 or a compatible 0.6.x version, and npm on PATH for Git installation.

@@ -14,7 +14,7 @@ test("settings reject invalid sizes and font names through the host", async () =
     assert.deepEqual(Object.keys(harness.registrations.settingsDescriptors), [
       ...TEXT_AREAS.flatMap((area) => [area.key, area.lineKey]),
       "uiFont", "codeFont", "serifFont", "terminalFont",
-      "minimizeWhileRunning", "loader",
+      "sidebarCards", "minimizeWhileRunning", "loader",
     ]);
     for (const level of TEXT_AREAS) {
       for (const value of [8, 16.5, level.max]) {

@@ -61,6 +61,26 @@ Both features use Oldtale colors and work without Beautiful Chat.
 Keep Beautiful Chat disabled during local development to inspect Oldtale independently.
 See [BEAUTIFUL_CHAT_MIGRATION.md](BEAUTIFUL_CHAT_MIGRATION.md) for feature decisions and the local verification workflow.
 
+## Sidebar cards
+
+**Карточки чатов в левой панели** is enabled by default in the plugin settings.
+Each card shows the title above its Git branch, the update age beside the native status,
+and the provider icon in the lower right corner.
+The branch comes from the thread's environment. Threads without a branch leave that line blank.
+Times use compact units: `m` for minutes, `h` for hours, and `d` for days.
+The cards use the sidebar font settings and work in both Oldtale modes.
+
+Turn the setting off to restore the native rows immediately:
+
+```sh
+bb plugin config oldtale-theme set sidebarCards false
+```
+
+This layout follows the supplied screenshot. It uses BB's live sidebar SDK data and decorates
+the existing rows, preserving navigation, status indicators, menus, and drag behavior.
+It respects the thread list's provider-icon preference.
+BB's row markup is not a public contract; if it changes, the cards may need an update.
+
 ## Font settings
 
 Open **Plugins → Installed plugins → Oldtale Theme → Settings**.

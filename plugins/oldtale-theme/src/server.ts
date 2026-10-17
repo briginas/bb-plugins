@@ -29,6 +29,12 @@ export default function plugin(bb: BbPluginApi): void {
     codeFont: { type: "string", label: "Шрифт кода", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
     serifFont: { type: "string", label: "Шрифт для текста с засечками", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
     terminalFont: { type: "string", label: "Шрифт терминала", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
+    sidebarCards: {
+      type: "boolean",
+      label: "Карточки чатов в левой панели",
+      description: "Название и ветка в две строки, время обновления и статус справа, значок провайдера внизу. Применяется сразу, когда выбрана тема Oldtale.",
+      default: true,
+    },
     minimizeWhileRunning: {
       type: "boolean",
       label: "Сворачивать пустой ввод во время ответа",
