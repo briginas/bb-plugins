@@ -45,6 +45,22 @@ Installation adds the palette without changing the current selection.
 The plugin ID is `oldtale-theme`.
 The palette ID is `plugin:oldtale-theme:oldtale`.
 
+## Composer
+
+Send actions keep the Dusty Rose accent.
+While a reply is running, the empty follow-up composer shrinks to one line.
+Typing a follow-up or starting voice input restores the expanded composer.
+Turn this off with **Сворачивать пустой ввод во время ответа** in the plugin settings.
+
+Pending work rows use a pixel-grid loader by default.
+The **Индикатор ожидания** setting offers `drive`, `dots`, `orbit`, `coins`, and `bb` (the native icon).
+Coins use a local CSS Paint Worklet and fall back to the grid when unavailable.
+Reduced-motion preferences stop the loader animation.
+Both features use Oldtale colors and work without Beautiful Chat.
+
+Keep Beautiful Chat disabled during local development to inspect Oldtale independently.
+See [BEAUTIFUL_CHAT_MIGRATION.md](BEAUTIFUL_CHAT_MIGRATION.md) for feature decisions and the local verification workflow.
+
 ## Font settings
 
 Open **Plugins → Installed plugins → Oldtale Theme → Settings**.

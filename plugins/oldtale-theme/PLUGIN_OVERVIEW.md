@@ -30,6 +30,18 @@ The default family is CodeNewRoman Nerd Font, with a monospace fallback.
 Changes apply immediately while Oldtale is active and persist across reloads.
 Window zoom and the canvas terminal size stay independent of these settings.
 
+## Chat
+
+The empty follow-up composer shrinks to one line while a reply is running.
+Typing a follow-up or using voice input restores its full height.
+Disable this behavior in the plugin settings if needed.
+
+Choose a pending-row loader in **Индикатор ожидания**:
+`drive` (default grid), `dots`, `orbit`, `coins`, or `bb` (native icon).
+Coins fall back to the grid if the browser cannot run the local paint worklet.
+Loaders respect reduced-motion preferences and use Oldtale colors.
+Beautiful Chat is not required.
+
 ## Requirements
 
 BB 0.46.0 or later, Plugin SDK 0.6.37 or a compatible 0.6.x version, and npm on PATH for Git installation.

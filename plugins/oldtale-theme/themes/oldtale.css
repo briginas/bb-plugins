@@ -291,3 +291,221 @@ pre.bb-code-highlight {
 [style*="--diffs-font-size"] {
   --diffs-font-size: var(--oldtale-size-code, 14px) !important;
 }
+
+/* Selected Beautiful Chat features 05 and 19 (MIT; see THIRD_PARTY_NOTICES.md). */
+/* ── Minimize while running (minimizeWhileRunning) ───────────────────────────── */
+/* While a response is generating, the prompt box drops to BB's own one-line compact
+   layout, freeing room for the reply. These are BB's compact-composer rules with
+   the trigger swapped for the send button: "Stop run" means a run is live and the
+   box is empty. Typing a follow-up flips it to "Steer current run", so the box
+   grows back as soon as you type, focused or not; voice input keeps the full box. */
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) {
+  overflow: hidden;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-action-row] {
+  inset-block: 0;
+  gap: 0;
+  padding: 0;
+  position: absolute;
+  right: .5rem;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-main] {
+  height: 3rem;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-expanded-only] {
+  display: none!important;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-scroll] {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 3.5rem;
+  overflow: hidden;
+  height: 3rem!important;
+  min-height: 3rem!important;
+  max-height: 3rem!important;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] {
+  align-items: center;
+  height: 100%;
+  display: flex;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] {
+  text-overflow: ellipsis;
+  width: 100%;
+  max-height: 1.7em;
+  overflow: hidden;
+  white-space: nowrap!important;
+  min-height: 0!important;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable]>*,
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] :where(blockquote,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+ol,
+p,
+ul) {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: inherit;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable]>*+:before,
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] :where(blockquote,
+li)>*+:before,
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] :where(ol,
+ul)>li+li:before {
+  content: " ";
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] br {
+  content: " ";
+  display: inline;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror[contenteditable] br:after {
+  content: " ";
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .prompt-mention-pill>span:last-child {
+  min-width: 0;
+}
+:root:not([data-oldtale-minimize="false"]) [data-follow-up-composer]:has([data-promptbox-submit-action][aria-label="Stop run"]) [data-promptbox]:not([data-promptbox-voice-active]) [data-promptbox-editor-content] .ProseMirror p.is-editor-empty:first-child:before {
+  content: var(--promptbox-container-compact-placeholder);
+}
+
+
+/* ── Loading (loader): BeautifulUI's pixel loaders replace the pending row icon ── */
+@property --oldtale-px-a { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-px-b { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-px-c { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-px-d { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-0 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-1 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-2 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-3 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-4 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-5 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-6 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@property --oldtale-orb-7 { syntax: "<number>"; inherits: false; initial-value: 0.15; }
+@keyframes oldtale-px-a { 0%, 62%, 100% { --oldtale-px-a: 0.15; } 18%, 42% { --oldtale-px-a: 1; } }
+@keyframes oldtale-px-b { 0%, 62%, 100% { --oldtale-px-b: 0.15; } 18%, 42% { --oldtale-px-b: 1; } }
+@keyframes oldtale-px-c { 0%, 62%, 100% { --oldtale-px-c: 0.15; } 18%, 42% { --oldtale-px-c: 1; } }
+@keyframes oldtale-px-d { 0%, 62%, 100% { --oldtale-px-d: 0.15; } 18%, 42% { --oldtale-px-d: 1; } }
+@keyframes oldtale-orb-0 { 0%, 62%, 100% { --oldtale-orb-0: 0.15; } 18%, 42% { --oldtale-orb-0: 1; } }
+@keyframes oldtale-orb-1 { 0%, 62%, 100% { --oldtale-orb-1: 0.15; } 18%, 42% { --oldtale-orb-1: 1; } }
+@keyframes oldtale-orb-2 { 0%, 62%, 100% { --oldtale-orb-2: 0.15; } 18%, 42% { --oldtale-orb-2: 1; } }
+@keyframes oldtale-orb-3 { 0%, 62%, 100% { --oldtale-orb-3: 0.15; } 18%, 42% { --oldtale-orb-3: 1; } }
+@keyframes oldtale-orb-4 { 0%, 62%, 100% { --oldtale-orb-4: 0.15; } 18%, 42% { --oldtale-orb-4: 1; } }
+@keyframes oldtale-orb-5 { 0%, 62%, 100% { --oldtale-orb-5: 0.15; } 18%, 42% { --oldtale-orb-5: 1; } }
+@keyframes oldtale-orb-6 { 0%, 62%, 100% { --oldtale-orb-6: 0.15; } 18%, 42% { --oldtale-orb-6: 1; } }
+@keyframes oldtale-orb-7 { 0%, 62%, 100% { --oldtale-orb-7: 0.15; } 18%, 42% { --oldtale-orb-7: 1; } }
+
+:root:not([data-oldtale-loader="bb"]) [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child) > svg {
+  display: none;
+}
+:root:not([data-oldtale-loader="bb"]) [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+  --oldtale-px-on: var(--foreground);
+  content: "";
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+/* Drive (default): square pixels sweep diagonally. */
+:root:not([data-oldtale-loader]) [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before,
+:root[data-oldtale-loader="drive"] [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before,
+:root[data-oldtale-loader="coins"]:not([data-oldtale-coins-ready]) [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+  background:
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 0 0) 0px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 0 0) 5px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-d) * 100%), transparent) 0 0) 10px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-a) * 100%), transparent) 0 0) 0px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 0 0) 5px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 0 0) 10px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 0 0) 0px 10px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 0 0) 5px 10px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-d) * 100%), transparent) 0 0) 10px 10px / 4px 4px no-repeat;
+  animation:
+    oldtale-px-a 650ms ease-in-out 0ms infinite,
+    oldtale-px-b 650ms ease-in-out 90ms infinite,
+    oldtale-px-c 650ms ease-in-out 180ms infinite,
+    oldtale-px-d 650ms ease-in-out 270ms infinite;
+}
+/* Dots: the same sweep with round pixels. */
+:root[data-oldtale-loader="dots"] [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+  background:
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 90%, transparent) 0px 0px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 90%, transparent) 5px 0px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-d) * 100%), transparent) 90%, transparent) 10px 0px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-a) * 100%), transparent) 90%, transparent) 0px 5px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 90%, transparent) 5px 5px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 90%, transparent) 10px 5px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-b) * 100%), transparent) 90%, transparent) 0px 10px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-c) * 100%), transparent) 90%, transparent) 5px 10px / 4px 4px no-repeat,
+    radial-gradient(closest-side, color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-px-d) * 100%), transparent) 90%, transparent) 10px 10px / 4px 4px no-repeat;
+  animation:
+    oldtale-px-a 650ms ease-in-out 0ms infinite,
+    oldtale-px-b 650ms ease-in-out 90ms infinite,
+    oldtale-px-c 650ms ease-in-out 180ms infinite,
+    oldtale-px-d 650ms ease-in-out 270ms infinite;
+}
+/* Orbit: one lit pixel walks the edge; the centre stays dim. */
+:root[data-oldtale-loader="orbit"] [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+  background:
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-0) * 100%), transparent) 0 0) 0px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-1) * 100%), transparent) 0 0) 5px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-2) * 100%), transparent) 0 0) 10px 0px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-7) * 100%), transparent) 0 0) 0px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) 7%, transparent) 0 0) 5px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-3) * 100%), transparent) 0 0) 10px 5px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-6) * 100%), transparent) 0 0) 0px 10px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-5) * 100%), transparent) 0 0) 5px 10px / 4px 4px no-repeat,
+    linear-gradient(color-mix(in oklch, var(--oldtale-px-on) calc(var(--oldtale-orb-4) * 100%), transparent) 0 0) 10px 10px / 4px 4px no-repeat;
+  animation:
+    oldtale-orb-0 950ms ease-in-out 0ms infinite,
+    oldtale-orb-1 950ms ease-in-out 110ms infinite,
+    oldtale-orb-2 950ms ease-in-out 220ms infinite,
+    oldtale-orb-3 950ms ease-in-out 330ms infinite,
+    oldtale-orb-4 950ms ease-in-out 440ms infinite,
+    oldtale-orb-5 950ms ease-in-out 550ms infinite,
+    oldtale-orb-6 950ms ease-in-out 660ms infinite,
+    oldtale-orb-7 950ms ease-in-out 770ms infinite;
+}
+
+/* Coins: Originkit's ring of tumbling coins, painted by coins-worklet.ts. One loop
+   (10.472s) turns the ring once and tumbles each coin twice. */
+@property --oldtale-coin-t { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --oldtale-coin-color { syntax: "<color>"; inherits: false; initial-value: #fff; }
+@keyframes oldtale-coin-t { to { --oldtale-coin-t: 1; } }
+:root[data-oldtale-loader="coins"][data-oldtale-coins-ready] [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+  --oldtale-coin-color: var(--foreground);
+  background: paint(oldtale-coins);
+  animation: oldtale-coin-t 10.472s linear infinite;
+}
+
+
+/* Keep a visible static loader when the user requests less motion. */
+@media (prefers-reduced-motion: reduce) {
+  :root [data-timeline-row-list] .group\/timeline-row > button > span > span:has(> span > .animate-shine:first-child)::before {
+    animation: none !important;
+    --oldtale-px-a: 0.65;
+    --oldtale-px-b: 0.65;
+    --oldtale-px-c: 0.65;
+    --oldtale-px-d: 0.65;
+    --oldtale-orb-0: 0.65;
+    --oldtale-orb-1: 0.65;
+    --oldtale-orb-2: 0.65;
+    --oldtale-orb-3: 0.65;
+    --oldtale-orb-4: 0.65;
+    --oldtale-orb-5: 0.65;
+    --oldtale-orb-6: 0.65;
+    --oldtale-orb-7: 0.65;
+  }
+}

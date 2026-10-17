@@ -1,6 +1,7 @@
 import type { BbPluginApi } from "@get-bb/plugin-sdk";
 import { z } from "zod";
 import { DEFAULT_FONT, TEXT_AREAS, validFont, validTextSize, validLineHeight } from "./typography";
+import { LOADERS } from "./chat";
 
 export default function plugin(bb: BbPluginApi): void {
   const fontSchema = z.string().refine(validFont, "Введите название семейства шрифта (1–120 символов, без переносов строк).");
@@ -28,6 +29,19 @@ export default function plugin(bb: BbPluginApi): void {
     codeFont: { type: "string", label: "Шрифт кода", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
     serifFont: { type: "string", label: "Шрифт для текста с засечками", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
     terminalFont: { type: "string", label: "Шрифт терминала", description: fontDescription, default: DEFAULT_FONT, experimental_schema: fontSchema },
+    minimizeWhileRunning: {
+      type: "boolean",
+      label: "Сворачивать пустой ввод во время ответа",
+      description: "Поле становится однострочным во время генерации. Набор текста или голосовой ввод возвращает полную высоту.",
+      default: true,
+    },
+    loader: {
+      type: "select",
+      label: "Индикатор ожидания",
+      description: "drive — пиксельная сетка; dots — точки; orbit — орбита; coins — монеты; bb — стандартный индикатор. Если монеты недоступны, используется сетка.",
+      options: [...LOADERS],
+      default: "drive",
+    },
   });
   bb.log.info("Oldtale theme loaded");
 }
